@@ -12,8 +12,6 @@ public class DataBaseConnection {
 
     public static void Connect() throws SQLException {
 
-
-        System.out.println("c");
     }
 
     public static void like(Post post, Integer id, Date date) throws SQLException {
