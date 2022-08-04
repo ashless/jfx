@@ -16,7 +16,7 @@ public class publicChatMenu extends Menu {
            public void runMenu() throws SQLException {
 
                while (true) { git pull origin zahra --allow-unrelated-histories
-
+ git pull origin zahra --allow-unrelated-histories
                    print();
                    switch (chooseOperation()) {
                        case 1:
