@@ -91,6 +91,7 @@ public class ProfileMenu implements Initializable {
                             break;
                         case "private chat":
 
+                            switchToChat();
                             // new privateChatMenu(user).runMenu();
                             break;
                         case "group chat":
@@ -118,6 +119,16 @@ public class ProfileMenu implements Initializable {
 
     private void switchToFollow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
+        new FollowMenu(user);
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        myLabel.setText("Follow");
+        stage.setTitle("Follow");
+        stage.setScene(scene);
+        stage.show();
+    }
+    private void switchToChat() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("chat.fxml"));
         new FollowMenu(user);
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);

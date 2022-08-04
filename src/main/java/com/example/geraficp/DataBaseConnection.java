@@ -8,7 +8,7 @@ import java.util.Set;
 public class DataBaseConnection {
     private String url = "jdbc:mysql://localhost:3306/data";
     private static String username = "root";
-    private static String password = "Zahra@2003";
+    private static String password = "ali12341234";
 
     public static void Connect() throws SQLException {
 
