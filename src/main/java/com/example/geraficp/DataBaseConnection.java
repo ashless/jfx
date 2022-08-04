@@ -218,6 +218,7 @@ public class DataBaseConnection {
 
     public static User findByUsername(String username1) {
         String a = "\"";
+
         String sql = "SELECT * FROM users where USERNAME = " + a + username1 + a;
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
