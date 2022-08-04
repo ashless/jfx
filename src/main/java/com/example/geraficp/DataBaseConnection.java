@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DataBaseConnection {
-    private String url = "jdbc:mysql://localhost:3306/data";
-    private static String username = "root";
-    private static String password = "Zahra@2003";
+    private final String url = "jdbc:mysql://localhost:3306/data";
+    private static final String username = "root";
+    private static final String password = "ali12341234";
 
     public static void Connect() throws SQLException {
 
@@ -135,7 +135,7 @@ public class DataBaseConnection {
 
         ArrayList<String> posts = new ArrayList<>();
 
-        String sql1 = "SELECT Text FROM posts where SENDER_ID = " + Integer.toString(user.getUSER_ID());
+        String sql1 = "SELECT Text FROM posts where SENDER_ID = " + user.getUSER_ID();
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
@@ -629,7 +629,7 @@ public static ArrayList<Post> findPostsOfUser(User user)throws SQLException{
 
         ArrayList<Post> posts=new ArrayList<>();
 
-        String sql1="SELECT * FROM posts where SENDER_ID = "+Integer.toString(user.getUSER_ID());
+        String sql1="SELECT * FROM posts where SENDER_ID = "+ user.getUSER_ID();
 
         try(Connection con=DriverManager.getConnection("jdbc:mysql://localhost/data",
         username,password);
@@ -748,7 +748,7 @@ public static ArrayList<Chat> findChatOfGroup(User user)throws SQLException{
 
         return groups;
         }
-public static ArrayList<String> findChatOfGroups(User user)throws SQLException{
+        public static ArrayList<String> findChatOfGroups(User user)throws SQLException{
         String sql="SELECT * FROM `groups` where SENDER_ID = "+user.getUSER_ID();
         ArrayList<String> groups=new ArrayList<>();
         //System.out.println(sql);
@@ -766,7 +766,7 @@ public static ArrayList<String> findChatOfGroups(User user)throws SQLException{
         return groups;
         }
 public static ArrayList<String> findChatOfGroups(GroupChat groupChat)throws SQLException{
-        String sql="SELECT * FROM `groups` where GROUP_ID = "+Integer.toString(groupChat.getGROUP_ID());
+        String sql="SELECT * FROM `groups` where GROUP_ID = "+ groupChat.getGROUP_ID();
         ArrayList<String> groups=new ArrayList<>();
         try(Connection con=DriverManager.getConnection("jdbc:mysql://localhost/data",
         username,password);
