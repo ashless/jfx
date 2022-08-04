@@ -216,24 +216,13 @@ public class DataBaseConnection {
         return null;
     }
 
-    public static User findByUsername(String username) {
-        String sql = "SELECT PASSWORD FROM users where USERNAME := " + username;
+    public static User findByUsername(String username1) {
+        String sql = "SELECT PASSWORD FROM users where USERNAME := " + username1;
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
              Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            String pass = "";
-            // loop through the result set
-            while (rs.next()) {
-                pass = rs.getString("PASSWORD");
-            }
-            String sql1 = "SELECT PASSWORD FROM users where USERNAME := " + username;
-            if (!password.equals("")) {
-                try (Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost/data",
-                        username, password);
-                     Statement stmt1 = con1.createStatement();
-                     ResultSet rs1 = stmt1.executeQuery(sql1)) {
+             ResultSet rs1 = stmt.executeQuery(sql)) {
 
                     String FIRST_NAME = "";
                     String LAST_NAME = "";
@@ -258,12 +247,11 @@ public class DataBaseConnection {
                     }
 
                     return new User(FIRST_NAME, LAST_NAME, PHONE_NUMBER, EMAIL, AGE, Business, USER_ID, USERNAME, PASSWORD);
-                }
-
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+                } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+
         return null;
     }
 
