@@ -28,12 +28,13 @@ public class ProfileMenu implements Initializable {
         //        + user.getFIRST_NAME() + "  "
         //      + user.getLAST_NAME());
     }
-    public ProfileMenu(){
+
+    public ProfileMenu() {
 
     }
 
 
-    private String[] menuList={"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
 
 
     public String[] getMenuList() {
@@ -59,19 +60,22 @@ public class ProfileMenu implements Initializable {
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
 
                 selectedItem1 = menu_List.getSelectionModel().getSelectedItem();
-                switch (selectedItem1) {
-                    case "post":
+                try {
+                    switch (selectedItem1) {
+                        case "post":
 
-                        //  new PostMenu(user).runMenu();
-                        break;
-                    case "Comment":
 
-                        // new CommentMenu(user).runMenu();
-                        break;
-                    case "like":
-                        //new LikeMenu(user).runMenu();
-                        break;
-                    case "Show Tweet Of All Users":
+                            //  new PostMenu(user).runMenu();
+                            break;
+                        case "Comment":
+
+                            // new CommentMenu(user).runMenu();
+                            break;
+                        case "like":
+
+                            //new LikeMenu(user).runMenu();
+                            break;
+                        case "Show Tweet Of All Users":
 
                         /*System.out.println("***List all posts:***");
                         for (Post posts : DataBaseConnection.findAllPost()) {
@@ -80,24 +84,27 @@ public class ProfileMenu implements Initializable {
                         }
 
                          */
-                        break;
-                    case "follow":
+                            break;
+                        case "follow":
+                            switchToFollow();
+                            //new FollowMenu(user).runMenu();
+                            break;
+                        case "private chat":
 
-                        // new FollowMenu(user).runMenu();
-                        break;
-                    case "private chat":
+                            // new privateChatMenu(user).runMenu();
+                            break;
+                        case "group chat":
 
-                        // new privateChatMenu(user).runMenu();
-                        break;
-                    case "group chat":
+                            //    new publicChatMenu(user).runMenu();
+                            break;
+                        case "Log out":
 
-                        //    new publicChatMenu(user).runMenu();
-                        break;
-                    case "Log out":
-
-                        return;
+                            return;
 
 
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -107,21 +114,20 @@ public class ProfileMenu implements Initializable {
     public void setMenu_List(ListView<String> menu_List) {
         this.menu_List = menu_List;
     }
-}
-/*
-    private void switchToCreate() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("create.fxml"));
-        this.stage=HelloApplication.getInstance().getStage();
+
+
+    private void switchToFollow() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
+        new FollowMenu(user);
+        this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
-        myLabel.setText(selectedItem1);
-        stage.setTitle("login");
+        myLabel.setText("Follow");
+        stage.setTitle("Follow");
         stage.setScene(scene);
         stage.show();
     }
 
-
- */
-
+}
 
 
 

@@ -1,17 +1,95 @@
-/*package com.example.geraficp;
+package com.example.geraficp;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class FollowMenu extends Menu {
+public class FollowMenu implements Initializable {
 
-    private final User user;
+    private  User user;
+    private Stage stage;
+    private Scene scene;
 
     public FollowMenu(User user) {
-        super(new String[]{"follow", "Show My followers", "Show MY followings","Back"});
         this.user = user;
+        //  System.out.println("Welcome to your work bench... \n"
+        //        + user.getFIRST_NAME() + "  "
+        //      + user.getLAST_NAME());
     }
+    public FollowMenu() {
+
+    }
+    private String[] menuList = {"follow", "Show My followers", "Show MY followings","Back"};
+
+    public String[] getMenuList() {
+        return menuList;
+    }
+
+    @FXML
+    private ListView<String> menu_List = new ListView<>();
+
+    String selectedItem1;
+    @FXML
+    private Label myLabel;
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+        menu_List.getItems().addAll(menuList);
+        menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+
+                selectedItem1 = menu_List.getSelectionModel().getSelectedItem();
+                try {
+                    switch (selectedItem1) {
+                        case "follow":
+
+
+                            //  new PostMenu(user).runMenu();
+                            break;
+                        case  "Show My followers":
+
+                            // new CommentMenu(user).runMenu();
+                            break;
+                        case  "Show MY followings":
+
+                            //new LikeMenu(user).runMenu();
+                            break;
+                        case "Back":
+
+                            return;
+
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void setMenu_List(ListView<String> menu_List) {
+        this.menu_List = menu_List;
+    }
+
+/*
     public void runMenu() throws SQLException {
 
         while (true) {
@@ -77,6 +155,7 @@ public class FollowMenu extends Menu {
         return new ShowUsersInformation<User>(textfollow, UserList, true).runMenu();
 
     }
-}
 
  */
+}
+

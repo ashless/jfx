@@ -8,10 +8,12 @@ import java.util.Set;
 public class DataBaseConnection {
     private String url = "jdbc:mysql://localhost:3306/data";
     private static String username = "root";
-    private static String password = "ali12341234";
+    private static String password = "Zahra@2003";
 
     public static void Connect() throws SQLException {
 
+
+        System.out.println("c");
     }
 
     public static void like(Post post, Integer id, Date date) throws SQLException {
@@ -28,7 +30,7 @@ public class DataBaseConnection {
 
     public static void addUser(User user) throws SQLException {
 
-        String q = "SELECT COUNT(*) FROM users";
+        String q = "SELECT COUNT() FROM users";
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         String query = "insert into users values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
