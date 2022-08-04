@@ -22,12 +22,12 @@ public class ProfileMenu implements Initializable {
     private Stage stage;
     private Scene scene;
 
-    public ProfileMenu(User user) {
-        this.user = user;
+ //   public ProfileMenu(User user) {
+   //     this.user = user;
         //  System.out.println("Welcome to your work bench... \n"
         //        + user.getFIRST_NAME() + "  "
         //      + user.getLAST_NAME());
-    }
+   // }
 
     public ProfileMenu() {
 
@@ -35,6 +35,10 @@ public class ProfileMenu implements Initializable {
 
 
     private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+
+    public void setUser(User user) {
+        this.user=user;
+    }
 
 
     public String[] getMenuList() {
@@ -118,7 +122,8 @@ public class ProfileMenu implements Initializable {
 
     private void switchToFollow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
-        new FollowMenu(user);
+       FollowMenu followMenu=new FollowMenu();
+        followMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
         myLabel.setText("Follow");

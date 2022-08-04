@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class loginMenu {
 
-    private User user;
+    private static User user;
     private Stage stage;
     private Scene scene;
 
@@ -43,6 +43,7 @@ public class loginMenu {
         if (Objects.isNull(user)) {
            warning.setText("warning:Your password or username is wrong ...");
         }else{
+            setUser(user);
             switchToprofileMenu(e);
 
         }
@@ -52,7 +53,8 @@ public class loginMenu {
     public void switchToprofileMenu(ActionEvent e) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("ProfileMenu.fxml"));
-        new ProfileMenu(user);
+   ProfileMenu profileMenu=new ProfileMenu();
+        profileMenu.setUser(getUser());
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
         myLabel.setText("ProfileMenu");
@@ -62,7 +64,7 @@ public class loginMenu {
 
     }
 
-    public User getUser() {
+    public static User getUser() {
         return user;
     }
 
