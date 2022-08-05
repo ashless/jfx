@@ -28,7 +28,7 @@ public class FollowMenu  {
     private Scene scene;
 
     public FollowMenu(User user) {
-        FollowMenu.user = user;
+        this.user = user;
         //  System.out.println("Welcome to your work bench... \n"
         //        + user.getFIRST_NAME() + "  "
         //      + user.getLAST_NAME());
@@ -102,7 +102,7 @@ public class FollowMenu  {
     }
 
     public void setUser(User user) {
-        FollowMenu.user =user;
+        this.user=user;
     }
 }
 

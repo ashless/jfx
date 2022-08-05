@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,19 +23,23 @@ public class ProfileMenu implements Initializable {
     private Stage stage;
     private Scene scene;
 
-    public ProfileMenu(User user) {
-        this.user = user;
-        //  System.out.println("Welcome to your work bench... \n"
-        //        + user.getFIRST_NAME() + "  "
-        //      + user.getLAST_NAME());
-    }
+    //   public ProfileMenu(User user) {
+    //     this.user = user;
+    //  System.out.println("Welcome to your work bench... \n"
+    //        + user.getFIRST_NAME() + "  "
+    //      + user.getLAST_NAME());
+    // }
 
     public ProfileMenu() {
 
     }
 
 
-    private final String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 
     public String[] getMenuList() {
@@ -51,20 +56,20 @@ public class ProfileMenu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] s = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+        String[] s = {"Add Post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "show post", "Log out"};
 
         menu_List.getItems().addAll(s);
         menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-
+                System.out.println(user.getUSERNAME());
                 selectedItem1 = menu_List.getSelectionModel().getSelectedItem();
                 try {
                     switch (selectedItem1) {
-                        case "post":
+                        case "Add Post":
 
-
+                            switchToPostMenu();
                             //  new PostMenu(user).runMenu();
                             break;
                         case "Comment":
@@ -91,12 +96,14 @@ public class ProfileMenu implements Initializable {
                             break;
                         case "private chat":
 
-                            switchToChat();
                             // new privateChatMenu(user).runMenu();
                             break;
                         case "group chat":
 
                             //    new publicChatMenu(user).runMenu();
+                            break;
+                        case "show post":
+                            switchToshowPost();
                             break;
                         case "Log out":
 
@@ -112,6 +119,30 @@ public class ProfileMenu implements Initializable {
         });
     }
 
+    private void switchToshowPost() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("showPost.fxml"));
+        showPost showPost = new showPost();
+        showPost.setUser(loginMenu.getUser());
+        System.out.println(user.getUSERNAME());
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        stage.setTitle("show Post");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void switchToPostMenu() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("PostMenu.fxml"));
+        PostMenu postMenu = new PostMenu();
+        postMenu.setUser(loginMenu.getUser());
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        myLabel.setText("Add Post");
+        stage.setTitle("Add Post");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void setMenu_List(ListView<String> menu_List) {
         this.menu_List = menu_List;
     }
@@ -119,17 +150,8 @@ public class ProfileMenu implements Initializable {
 
     private void switchToFollow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
-        new FollowMenu(user);
-        this.stage = HelloApplication.getInstance().getStage();
-        scene = new Scene(root);
-        myLabel.setText("Follow");
-        stage.setTitle("Follow");
-        stage.setScene(scene);
-        stage.show();
-    }
-    private void switchToChat() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("chat.fxml"));
-        new FollowMenu(user);
+        FollowMenu followMenu = new FollowMenu();
+        followMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
         myLabel.setText("Follow");
@@ -138,11 +160,7 @@ public class ProfileMenu implements Initializable {
         stage.show();
     }
 
-    public static void setUser(User user1) {
-        user = user1;
-    }
-
-    public static User getUser() {
+    public User getUser() {
         return user;
     }
 }

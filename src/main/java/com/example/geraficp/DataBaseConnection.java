@@ -2,6 +2,7 @@ package com.example.geraficp;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -483,7 +484,7 @@ public class DataBaseConnection {
         ArrayList<User> usernames = new ArrayList<>();
         ArrayList<Integer> id = new ArrayList<>();
         String a = "\"";
-        String sql = "SELECT FOLLOWED_ID FROM follow where FOLLoWING_ID = " + a + user.getUSER_ID() + a;
+        String sql = "SELECT FOLLOWED_ID FROM follow where FOLLoWER_ID = " + a + user.getUSER_ID() + a;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
              Statement stmt = con.createStatement();
@@ -495,7 +496,7 @@ public class DataBaseConnection {
             }
 
             for (int i = 0; i < id.size(); i++) {
-                String sql1 = "SELECT USERNAME FROM users where ID = " + a + id.get(i) + a;
+                String sql1 = "SELECT * FROM users where ID = " + a + id.get(i) + a;
                 try (Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost/data",
                         username, password);
 
@@ -672,7 +673,7 @@ public class DataBaseConnection {
         Set setA = new HashSet();
         Statement stmt = con.createStatement();
         String quer = "select GROUP_ID from groupm";
-        String query = "insert into groupm values (?, ?, ?)";
+        String query = "insert into groupm values (?, ?, ?, ?)";
         String query1 = "insert into `groups` values (?, ?, ?, ?, ?, ?)";
         ResultSet rs = stmt.executeQuery(quer);
         while (rs.next()) {
@@ -686,11 +687,14 @@ public class DataBaseConnection {
             preparedStmt.setInt(1, setA.size() + 1);
             preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
             preparedStmt.setString(3, null);
+            preparedStmt.setString(4, "N");
             preparedStmt.execute();
             preparedStmt = con.prepareStatement(query);
             preparedStmt.setInt(1, setA.size() + 1);
             preparedStmt.setInt(2, groupChat.getUsers().get(1).getUSER_ID());
             preparedStmt.setString(3, null);
+            preparedStmt.setString(4, "N");
+
             preparedStmt.execute();
         }
         preparedStmt = con.prepareStatement(query1);
@@ -709,18 +713,25 @@ public class DataBaseConnection {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         Set setA = new HashSet();
+        java.util.Date javaDate = new java.util.Date();
+        java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
         Statement stmt = con.createStatement();
         String quer = "select GROUP_ID from groupm";
         ResultSet rs = stmt.executeQuery(quer);
-        String query = "insert into groupm values (?, ?, ?)";
+        String query = "insert into groupm values (?, ?, ?, ?)";
+        String query1 = "insert into `groups` values (?, ?, ?, ?, ?, ?)";
+
         PreparedStatement preparedStmt = con.prepareStatement(query);
         while (rs.next()) {
             setA.add(rs.getInt("GROUP_ID"));
         }
         preparedStmt.setInt(1, setA.size() + 1);
         preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
-        preparedStmt.setString(3, null);
+        preparedStmt.setString(3, groupChat.getGROUP_NAME());
+        preparedStmt.setString(4, "N");
         preparedStmt.execute();
+        preparedStmt = con.prepareStatement(query1);
+
     }
 
     public static ArrayList<Chat> findChatOfGroup(User user) throws SQLException {
@@ -786,7 +797,7 @@ public class DataBaseConnection {
     }
 
     public static ArrayList<Chat> findChatOfGroup(GroupChat groupChat) throws SQLException {
-        String sql = "SELECT * FROM `groups` where GROUP_ID = " + groupChat.getGROUP_ID();
+        String sql = "SELECT * FROM `groups` where GROUP_ID = " + chatExist(groupChat);
         String quer = "select count(*) from `groups`";
         ArrayList<Chat> groups = new ArrayList<>();
         int count;
@@ -810,6 +821,8 @@ public class DataBaseConnection {
             return groups;
         }
     }
+
+
 
 /*    public static Integer findChatByUsers(User user1, User user) throws SQLException{
         String sql = "SELECT * FROM groupm where USER_ID = " + user.getUSER_ID();
@@ -986,6 +999,25 @@ public class DataBaseConnection {
         }
 
         return gps;
+    }
+
+    public static ArrayList<GroupChat> groupsOfUser(User user) throws SQLException{
+        ArrayList<GroupChat> ss = new ArrayList<>();
+        String query2 = "SELECT * from `groupm` WHERE USER_ID = " + user.getUSER_ID();
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query2)) {
+            while (rs.next()) {
+                if(!(rs.getString("GROUP_NAME") == null)){
+                    ArrayList<User> kk = new ArrayList<>();
+                    kk.add(user);
+                    ss.add(new GroupChat(rs.getInt("GROUP_ID"), kk, new ArrayList<Chat>()));
+                }
+            }
+        }
+        return ss;
     }
 }
 

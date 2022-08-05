@@ -37,28 +37,29 @@ public class loginMenu {
 
 
     public void loginClick(ActionEvent e) throws SQLException, IOException {
-
-        User user = DataBaseConnection.findByUsername(username.getText(), password.getText());
+        System.out.println(username.getText());
+        System.out.println(password.getText());
+        System.out.println(DataBaseConnection.findByUsername(username.getText(), password.getText()).getUSERNAME());
+        User user1 = DataBaseConnection.findByUsername(username.getText(), password.getText());
+        System.out.println("1"+user1.getUSERNAME());
+        setUser(user1);
 
         if (Objects.isNull(user)) {
-           warning.setText("warning:Your password or username is wrong ...");
-        }else{
-            System.out.println(user.getUSERNAME());
-            System.out.println(user.getUSER_ID());
-            setUser(user);
-            ProfileMenu.setUser(user);
-            switchToprofileMenu(e);
+            warning.setText("warning:Your password or username is wrong ...");
+        } else {
+            System.out.println("2"+user.getUSERNAME());
+            switchToprofileMenu();
 
         }
     }
 
 
-    public void switchToprofileMenu(ActionEvent e) throws IOException {
+    public void switchToprofileMenu ()throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("ProfileMenu.fxml"));
-        ProfileMenu profileMenu=new ProfileMenu();
+        ProfileMenu profileMenu = new ProfileMenu();
         profileMenu.setUser(getUser());
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
+        this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
         myLabel.setText("ProfileMenu");
         stage.setTitle("ProfileMenu");
@@ -72,6 +73,6 @@ public class loginMenu {
     }
 
     public void setUser(User user) {
-        loginMenu.user = user;
+        this.user = user;
     }
 }

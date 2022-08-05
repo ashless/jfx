@@ -66,7 +66,7 @@ public class privateChatMenu implements Initializable {
                     switch (selectedItem1) {
 
                         case "private chat":
-                            Parent root = FXMLLoader.load(getClass().getResource("pv.fxml"));
+                            Parent root = FXMLLoader.load(getClass().getResource("g.fxml"));
                             new FollowMenu(user);
                             stage = HelloApplication.getInstance().getStage();
                             scene = new Scene(root);
@@ -76,7 +76,14 @@ public class privateChatMenu implements Initializable {
                             stage.show();
                             break;
                         case "group chat":
-
+                            root = FXMLLoader.load(getClass().getResource("g.fxml"));
+                            new FollowMenu(user);
+                            stage = HelloApplication.getInstance().getStage();
+                            scene = new Scene(root);
+                            myLabel.setText("pv");
+                            stage.setTitle("pv");
+                            stage.setScene(scene);
+                            stage.show();
                             break;
                         case "back":
                             root = FXMLLoader.load(getClass().getResource("mainpage.fxml"));
