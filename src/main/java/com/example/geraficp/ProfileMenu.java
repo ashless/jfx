@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -52,15 +54,21 @@ public class ProfileMenu implements Initializable {
     String selectedItem1;
     @FXML
     private Label myLabel;
-
+    @FXML
+    private Label username;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private Label followers;
+    @FXML
+    private Label followings;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] s = {"Add Post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "show post", "Log out"};
-
+        String[] s = {"Add Post", "show my post", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+        run();
         menu_List.getItems().addAll(s);
         menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
                 System.out.println(user.getUSERNAME());
@@ -72,13 +80,8 @@ public class ProfileMenu implements Initializable {
                             switchToPostMenu();
                             //  new PostMenu(user).runMenu();
                             break;
-                        case "Comment":
-
-                            // new CommentMenu(user).runMenu();
-                            break;
-                        case "like":
-
-                            //new LikeMenu(user).runMenu();
+                        case "show my post":
+                            switchToshowPost();
                             break;
                         case "Show Tweet Of All Users":
 
@@ -102,9 +105,7 @@ public class ProfileMenu implements Initializable {
 
                             //    new publicChatMenu(user).runMenu();
                             break;
-                        case "show post":
-                            switchToshowPost();
-                            break;
+
                         case "Log out":
 
                             return;
@@ -117,6 +118,20 @@ public class ProfileMenu implements Initializable {
 
             }
         });
+    }
+
+    private void run() throws SQLException {
+        username.setText(getUser().getUSERNAME());
+        int followersn=0,followingsn=0;
+        for (String s : DataBaseConnection.findfollowersOfUser(getUser())) {
+            followersn++;
+        }
+        for (String s : DataBaseConnection.findfollowingsOfUser(getUser())) {
+            followingsn++;
+        }
+        followers.setText("followers:"+Integer.toString(followersn));
+        followings.setText("followings:"+Integer.toString(followingsn));
+        imageView.setImage(new Image(getClass().getResourceAsStream("whitelike.png")));//apdatepictute
     }
 
     private void switchToshowPost() throws IOException {
