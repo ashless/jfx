@@ -3,9 +3,13 @@ package com.example.geraficp;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,19 +18,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class privateChatMenu extends Menu implements Initializable {
+public class privateChatMenu implements Initializable {
     private User user;
-
-    public privateChatMenu(User user) {
-        super(new String[]{"choose user", "Back"});
-        this.user = user;
-    }
+    private Scene scene;
+    private Stage stage;
 
     public privateChatMenu(){
 
     }
 
-    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+    private final String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
 
 
     public String[] getMenuList() {
@@ -36,15 +37,24 @@ public class privateChatMenu extends Menu implements Initializable {
     @FXML
     private ListView<String> menu_List = new ListView<>();
 
+
     String selectedItem1;
     @FXML
     private Label myLabel;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] s = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
-
+        String[] s = {"private chat", "group chat", "back"};
+        setUser(ProfileMenu.getUser());
+        System.out.println(user.getUSERNAME());
         menu_List.getItems().addAll(s);
         menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
@@ -54,46 +64,30 @@ public class privateChatMenu extends Menu implements Initializable {
                 selectedItem1 = menu_List.getSelectionModel().getSelectedItem();
                 try {
                     switch (selectedItem1) {
-                        case "post":
 
-
-                            //  new PostMenu(user).runMenu();
-                            break;
-                        case "Comment":
-
-                            // new CommentMenu(user).runMenu();
-                            break;
-                        case "like":
-
-                            //new LikeMenu(user).runMenu();
-                            break;
-                        case "Show Tweet Of All Users":
-
-                        /*System.out.println("***List all posts:***");
-                        for (Post posts : DataBaseConnection.findAllPost()) {
-                            System.out.print(posts.getUser().getUSERNAME() + "->");
-                            System.out.println(posts.getText());
-                        }
-
-                         */
-                            break;
-                        case "follow":
-                            //new FollowMenu(user).runMenu();
-                            break;
                         case "private chat":
-
-
-                            // new privateChatMenu(user).runMenu();
+                            Parent root = FXMLLoader.load(getClass().getResource("pv.fxml"));
+                            new FollowMenu(user);
+                            stage = HelloApplication.getInstance().getStage();
+                            scene = new Scene(root);
+                            myLabel.setText("pv");
+                            stage.setTitle("pv");
+                            stage.setScene(scene);
+                            stage.show();
                             break;
                         case "group chat":
 
-                            //    new publicChatMenu(user).runMenu();
                             break;
-                        case "Log out":
-
-                            return;
-
-
+                        case "back":
+                            root = FXMLLoader.load(getClass().getResource("mainpage.fxml"));
+                            new FollowMenu(user);
+                            stage = HelloApplication.getInstance().getStage();
+                            scene = new Scene(root);
+                            myLabel.setText("Follow");
+                            stage.setTitle("Follow");
+                            stage.setScene(scene);
+                            stage.show();
+                            break;
                     }
                 }
                 catch (Exception e) {
@@ -103,19 +97,11 @@ public class privateChatMenu extends Menu implements Initializable {
             }
         });
     }
-/*
-    public User ChooseUser() throws SQLException {
+    public void setMenu_List(ListView<String> menu_List) {
+        this.menu_List = menu_List;
+    }
 
-        ArrayList<User> UserList = new ArrayList<User>(DataBaseConnection.findAllUser());
 
-        ArrayList<String> texts = new ArrayList<String>(DataBaseConnection.findAllUsers());
-
-        texts.add("Back");
-        String[] textfollow = texts.toArray(new String[0]);
-        System.out.println("Enter your User to start  private chat :");
-        return new ShowUsersInformation<User>(textfollow, UserList, true).runMenu();
-
-    }*/
 }
 
 

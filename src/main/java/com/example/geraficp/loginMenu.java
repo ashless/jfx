@@ -43,7 +43,10 @@ public class loginMenu {
         if (Objects.isNull(user)) {
            warning.setText("warning:Your password or username is wrong ...");
         }else{
+            System.out.println(user.getUSERNAME());
+            System.out.println(user.getUSER_ID());
             setUser(user);
+            ProfileMenu.setUser(user);
             switchToprofileMenu(e);
 
         }
@@ -53,7 +56,7 @@ public class loginMenu {
     public void switchToprofileMenu(ActionEvent e) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("ProfileMenu.fxml"));
-   ProfileMenu profileMenu=new ProfileMenu();
+        ProfileMenu profileMenu=new ProfileMenu();
         profileMenu.setUser(getUser());
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -69,6 +72,6 @@ public class loginMenu {
     }
 
     public void setUser(User user) {
-        this.user = user;
+        loginMenu.user = user;
     }
 }

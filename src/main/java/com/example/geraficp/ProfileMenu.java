@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ProfileMenu implements Initializable {
-    private User user;
+    private static User user;
     private Stage stage;
     private Scene scene;
 
@@ -34,7 +34,7 @@ public class ProfileMenu implements Initializable {
     }
 
 
-    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+    private final String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
 
 
     public String[] getMenuList() {
@@ -138,6 +138,13 @@ public class ProfileMenu implements Initializable {
         stage.show();
     }
 
+    public static void setUser(User user1) {
+        user = user1;
+    }
+
+    public static User getUser() {
+        return user;
+    }
 }
 
 

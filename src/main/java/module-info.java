@@ -10,6 +10,7 @@ module com.example.geraficp {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires lombok;
 
     opens com.example.geraficp to javafx.fxml;
     exports com.example.geraficp;

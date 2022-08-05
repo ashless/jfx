@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Input {
-    private String message;
+    private final String message;
     private String warning;
     private String regex;
     private int floorInt;
@@ -20,7 +20,7 @@ public class Input {
     private Long inputLong;
     private String inputString;
     private Double inputDouble;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     public Input(String message, String warning, String regex, List<String> unAllowedValues) {
         this.message = message;

@@ -20,6 +20,8 @@ public class GroupChat {
         this.chats = chats;
     }
 
+
+
     public Integer getGROUP_ID() {
         return GROUP_ID;
     }
