@@ -1,66 +1,86 @@
-/*package com.example.geraficp;
+package com.example.geraficp;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-public class PostMenu extends Menu {
-    private final User user;
+public class PostMenu implements Initializable {
+    private  static User user;
+    private Stage stage;
+    private Scene scene;
 
-    // private final PostService tweetService;
-    // public final UserService userService = ApplicationContext.getUserService();
-    public PostMenu(User user) {
-        super(new String[]{"Add Post", "My Posts", "Back"});
+
+    public PostMenu() {
+
+    }
+
+
+    public void setUser(User user) {
         this.user = user;
-        //   this.tweetService = tweetService;
     }
 
+    @FXML
+    private TextField imageAddress;
+    @FXML
+    private TextField caption;
 
-    public void runMenu() throws SQLException {
-        // User user1 = findById(user.getId());
-        while (true) {
-            print();
-            Post post = new Post();
-            switch (chooseOperation()) {
-                case 1:
-                    if (user.getBusiness().equals("B")) {
-                        post.setText("Advertisement: " + new Input(
-                                "Enter your advertise text :",
-                                "Your text must be a minimum of 280 characters",
-                                "", null).getInputTextString());
-                    } else {
+    @FXML
+    private Label warning;
+    @FXML
+    private Label myLabel;
 
-                        post.setText(new Input(
-                                "Enter your text :",
-                                "Your text must be a minimum of 280 characters",
-                                "", null).getInputTextString());
-                    }
-                    java.util.Date javaDate = new java.util.Date();
-                    java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
-                    post.setCREATE_DATE_TIME(mySQLDate);
-                    post.setLAST_UPDATE_DATE_TIME(mySQLDate);
-                    post.setUser(user);
-                    DataBaseConnection.addPost(post);
-                    break;
-                case 2:
-                    System.out.println("***List of Your Post:***");
-                    for (Post posts : DataBaseConnection.findPostsOfUser(user)) {
-                        System.out.println(posts.getText());
-                        System.out.println("***List of comment:***");
-                        for (Comment comments:DataBaseConnection.findAllComment(posts)) {
-                            System.out.println(comments.getTextComment());
-                        }
-                        System.out.println("***List of likes:***");
-                        DataBaseConnection.findLikes(posts);
-                    }
 
-                    break;
-                case 3:
-                    return;
-            }
+    @FXML
+    private void addClick() throws SQLException, IOException {
+        Post post = new Post();
+        if (user.getBusiness().equals("B")) {
+            post.setText("Ad: " + caption.getText());
+        } else {
+            post.setText(caption.getText());
         }
+        java.util.Date javaDate = new java.util.Date();
+        java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
+        post.setCREATE_DATE_TIME(mySQLDate);
+        post.setLAST_UPDATE_DATE_TIME(mySQLDate);
+        post.setUser(user);
+        DataBaseConnection.addPost(post);
+        if (user.getBusiness().equals("B")) {
+            warning.setText("your advertise post add to your account");
+        } else {
+           warning.setText("your post add to your account");
+        }
+        switchToprofileMenu();
+    }
+
+
+    public void switchToprofileMenu() throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("ProfileMenu.fxml"));
+        ProfileMenu profileMenu=new ProfileMenu();
+        profileMenu.setUser(loginMenu.getUser());
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        myLabel.setText("ProfileMenu");
+        stage.setTitle("ProfileMenu");
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 }
 
-
-}
-*/
 
