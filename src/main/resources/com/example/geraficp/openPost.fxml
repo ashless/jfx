@@ -18,7 +18,7 @@
       <Label layoutX="342.0" layoutY="29.0" text="comment" />
       <TextField fx:id="comment" layoutX="342.0" layoutY="349.0" promptText="Enter your comment" />
       <Button fx:id="add" layoutX="521.0" layoutY="349.0" mnemonicParsing="false" text="add" />
-      <ImageView fx:id="like" fitHeight="37.0" fitWidth="36.0" layoutX="74.0" layoutY="296.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="like" fitHeight="37.0" fitWidth="36.0" layoutX="14.0" layoutY="274.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="back" layoutX="236.0" layoutY="349.0" mnemonicParsing="false" text="back" />
       <ImageView fx:id="user_picture" fitHeight="37.0" fitWidth="36.0" layoutX="29.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="username" layoutX="81.0" layoutY="14.0" prefHeight="31.0" prefWidth="92.0">
@@ -26,5 +26,6 @@
             <Font size="20.0" />
          </font>
       </Label>
+      <Label fx:id="caption" layoutX="1.0" layoutY="327.0" prefHeight="62.0" prefWidth="228.0" />
    </children>
 </Pane>

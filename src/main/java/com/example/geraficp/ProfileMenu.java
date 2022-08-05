@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ProfileMenu implements Initializable {
-    private User user;
+    private static User user;
     private Stage stage;
     private Scene scene;
 
@@ -63,7 +63,7 @@ public class ProfileMenu implements Initializable {
 
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-
+                System.out.println(user.getUSERNAME());
                 selectedItem1 = menu_List.getSelectionModel().getSelectedItem();
                 try {
                     switch (selectedItem1) {
@@ -123,6 +123,7 @@ public class ProfileMenu implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("showPost.fxml"));
         showPost showPost = new showPost();
         showPost.setUser(loginMenu.getUser());
+        System.out.println(user.getUSERNAME());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
         stage.setTitle("show Post");

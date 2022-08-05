@@ -39,6 +39,7 @@ public class showPost implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         setUser(loginMenu.getUser());
         select();
 
@@ -83,8 +84,8 @@ public class showPost implements Initializable {
 
         Parent root = FXMLLoader.load(getClass().getResource("openPost.fxml"));
         openPost openPost = new openPost();
-        openPost.setPost(post);
-        openPost.setUser(user);
+        openPost.setPost(getPost());
+        openPost.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
         stage.setTitle("post");

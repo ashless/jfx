@@ -15,17 +15,21 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 
 public class openPost implements Initializable {
     @FXML
-    private  Post post;
-    private  User user;
+    private static Post post;
+    private static User user;
 
     @FXML
     private Label username;
+    @FXML
+    private Label caption;
     @FXML
     private ImageView postimage;
 
@@ -63,7 +67,7 @@ public class openPost implements Initializable {
         return post;
     }
 
-    public  User getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -79,6 +83,7 @@ public class openPost implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUser(loginMenu.getUser());
         try {
+            System.out.println(user.getUSERNAME());
             run();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,13 +92,63 @@ public class openPost implements Initializable {
         }
 
     }
-
+    private boolean isIn(User user, List<User> likes) {
+        for (User user1 : likes) {
+            if (user1.equals(user))
+                return true;
+        }
+        return false;
+    }
     private void run() throws SQLException, IOException {
-        username.setText(user.getUSERNAME());
+        username.setText(getUser().getUSERNAME());
         Image image = new Image(getClass().getResourceAsStream("1.jpg"));//adress aks porof yaro
         postimage.setImage(image);
         Image image1 = new Image(getClass().getResourceAsStream("whitelike.png"));
-        like.setImage(image1);
+        Image image2 = new Image(getClass().getResourceAsStream("whitelike.png"));
+      //  if (!getPost().getText().equals(null)) {
+     //       caption.setText(post.getText());
+       // }
+        List<User> likes = DataBaseConnection.findLikes(post);
+        boolean isLiked = isIn(user, likes);
+        if (isLiked) {
+            post.getLikes().remove(user);
+            like.setImage(image1);
+        } else {
+            post.getLikes().add(user);
+            like.setImage(image2);
+        }
+        java.util.Date javaDate = new java.util.Date();
+        java.util.Date mySQLDate = new java.sql.Date(javaDate.getTime());
+
+        DataBaseConnection.like(post, post.getSender_Id(), (java.sql.Date) mySQLDate);
+
+        like.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                List<User> likes = null;
+                try {
+                    likes = DataBaseConnection.findLikes(post);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                boolean isLiked = isIn(user, likes);
+                if (isLiked) {
+                    post.getLikes().remove(user);
+                    like.setImage(image1);
+                } else {
+                    post.getLikes().add(user);
+                    like.setImage(image2);
+                }
+                java.util.Date javaDate = new java.util.Date();
+                java.util.Date mySQLDate = new java.sql.Date(javaDate.getTime());
+
+                try {
+                    DataBaseConnection.like(post, post.getSender_Id(), (java.sql.Date) mySQLDate);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         TreeItem<String> rootItem = new TreeItem<>("comments");
         add.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -102,7 +157,7 @@ public class openPost implements Initializable {
                     java.util.Date javaDate = new java.util.Date();
                     java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
                     try {
-                        DataBaseConnection.comment(post, user, comment.getText(), mySQLDate);
+                        DataBaseConnection.comment(getPost(), getUser(), comment.getText(), mySQLDate);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -145,7 +200,6 @@ public class openPost implements Initializable {
         profileMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
-
         stage.setTitle("ProfileMenu");
         stage.setScene(scene);
         stage.show();

@@ -26,6 +26,10 @@ public class User {
         this.posts = posts;
     }
 
+    public User (){
+
+    }
+
     public User(String FIRST_NAME, String LAST_NAME, String PHONE_NUMBER, String EMAIL,
                 Integer AGE, String business, String USERNAME, String PASSWORD, String ANSWER) {
         this.FIRST_NAME = FIRST_NAME;
@@ -64,7 +68,7 @@ public class User {
         this.USER_ID = USER_ID;
         this.USERNAME = USERNAME;
         this.PASSWORD = PASSWORD;
-        this.ANSWER=ANSWER;
+        this.ANSWER = ANSWER;
     }
 
     public String getBusiness() {
