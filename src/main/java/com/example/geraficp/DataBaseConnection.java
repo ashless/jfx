@@ -34,7 +34,7 @@ public class DataBaseConnection {
         String q = "SELECT COUNT(*) FROM users";
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
-        String query = "insert into users values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "insert into users values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Statement stmt = con.createStatement();
         String quer = "select count(*) from users";
         ResultSet rs = stmt.executeQuery(quer);
@@ -54,13 +54,14 @@ public class DataBaseConnection {
         preparedStmt.setString(8, user.getUSERNAME());
         preparedStmt.setString(9, user.getPASSWORD());
         preparedStmt.setString(10, user.getANSWER());
+        preparedStmt.setString(11, user.getprofile());
         preparedStmt.execute();
     }
 
     public static void addPost(Post post) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
-        String query = "insert into posts values (?, ?, ?, ?, ?)";
+        String query = "insert into posts values (?, ?, ?, ?, ?, ?)";
         Statement stmt = con.createStatement();
         String quer = "select count(*) from posts";
         ResultSet rs = stmt.executeQuery(quer);
@@ -72,8 +73,8 @@ public class DataBaseConnection {
         preparedStmt.setDate(3, post.getLAST_UPDATE_DATE_TIME());
         preparedStmt.setInt(4, count + 1);
         preparedStmt.setInt(5, post.getUser().getUSER_ID());
+        preparedStmt.setString(6,post.getAddress());
         preparedStmt.execute();
-
     }
 
     public static void follow(User follower, User followed) throws SQLException {
@@ -641,18 +642,20 @@ public class DataBaseConnection {
         return posts;
     }
 
-    public static void findLikes(Post post) throws SQLException {
-        String sql = "SELECT * FROM likes";
-
+    public static ArrayList<User> findLikes(Post post) throws SQLException {
+        String sql = "SELECT * FROM likes where POST_ID = " + post.getPost_Id();
+        ArrayList<User> ss =new ArrayList<>();
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
 
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            String comment = "";
+            while (rs.next()) {
+                ss.add(findUserById(rs.getInt("USER_ID")));
+            }
         }
 
-
+        return ss;
     }
 
     public static void answer(String ans) throws SQLException {
@@ -683,7 +686,7 @@ public class DataBaseConnection {
         java.util.Date javaDate = new java.util.Date();
         Date mySQLDate = new Date(javaDate.getTime());
 
-        if (chatExist(groupChat) == 0) {
+        if (chatExist(groupChat) == 0 && !(groupChat.getGROUP_NAME() == null)) {
             preparedStmt.setInt(1, setA.size() + 1);
             preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
             preparedStmt.setString(3, null);
@@ -725,7 +728,7 @@ public class DataBaseConnection {
         while (rs.next()) {
             setA.add(rs.getInt("GROUP_ID"));
         }
-        preparedStmt.setInt(1, setA.size() + 1);
+        preparedStmt.setInt(1, groupChat.getGROUP_ID());
         preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
         preparedStmt.setString(3, groupChat.getGROUP_NAME());
         preparedStmt.setString(4, "N");
@@ -1013,11 +1016,139 @@ public class DataBaseConnection {
                 if(!(rs.getString("GROUP_NAME") == null)){
                     ArrayList<User> kk = new ArrayList<>();
                     kk.add(user);
-                    ss.add(new GroupChat(rs.getInt("GROUP_ID"), kk, new ArrayList<Chat>()));
+                    GroupChat g = new GroupChat(rs.getInt("GROUP_ID"), kk, new ArrayList<Chat>());
+                    g.setGROUP_NAME(rs.getString("GROUP_NAME"));
+                    ss.add(g);
+
                 }
             }
         }
         return ss;
     }
+    public static void like(Comment comment, Integer id, Date date) throws SQLException {
+
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        String query = "insert into likesc values (?,?,?)";
+        PreparedStatement preparedStmt = con.prepareStatement(query);
+        preparedStmt.setInt(1, comment.getCOMMENT_ID());
+        preparedStmt.setInt(2, id);
+        preparedStmt.setDate(3, date);
+        preparedStmt.execute();
+    }
+    public static ArrayList<User> findLikes(Comment comment) throws SQLException {
+        String sql = "SELECT * FROM likesc where POST_ID = " + comment.getCOMMENT_ID();
+        ArrayList<User> ss =new ArrayList<>();
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                ss.add(findUserById(rs.getInt("USER_ID")));
+            }
+        }
+
+        return ss;
+    }
+    public static void comment(Comment comment, User user, String text, Date date) throws SQLException {
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        String query = "insert into commentsc values (?, ?, ?, ?, ?, ?)";
+        Statement stmt = con.createStatement();
+        String quer = "select count(*) from commentsc";
+        ResultSet rs = stmt.executeQuery(quer);
+        rs.next();
+        int count = rs.getInt(1);
+
+        PreparedStatement preparedStmt = con.prepareStatement(query);
+
+        preparedStmt.setString(1, text);
+        preparedStmt.setDate(2, date);
+        preparedStmt.setDate(3, date);
+        preparedStmt.setInt(4, count + 1);
+        preparedStmt.setInt(5, user.getUSER_ID());
+        preparedStmt.setInt(6, comment.getCOMMENT_ID());
+        preparedStmt.execute();
+
+    }
+    public static void addToGroup(User user) throws SQLException{
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+
+    }
+    public static void addGroup3(GroupChat groupChat, User user) throws SQLException {
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        Set setA = new HashSet();
+        java.util.Date javaDate = new java.util.Date();
+        java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
+        Statement stmt = con.createStatement();
+        String quer = "select GROUP_ID from groupm";
+        ResultSet rs = stmt.executeQuery(quer);
+        String query = "insert into groupm values (?, ?, ?, ?)";
+        String query1 = "insert into `groups` values (?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement preparedStmt = con.prepareStatement(query);
+        while (rs.next()) {
+            setA.add(rs.getInt("GROUP_ID"));
+        }
+        preparedStmt.setInt(1, groupChat.getGROUP_ID());
+        preparedStmt.setInt(2, user.getUSER_ID());
+        preparedStmt.setString(3, groupChat.getGROUP_NAME());
+        preparedStmt.setString(4, "N");
+        preparedStmt.execute();
+        preparedStmt = con.prepareStatement(query1);
+
+    }
+
+    public static ArrayList<User> findUsersOfGroup(GroupChat groupChat) throws SQLException{
+        ArrayList<User> users = new ArrayList<>();
+        String query2 = "SELECT * from `groupm` WHERE GROUP_ID = " + groupChat.getGROUP_ID();
+
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query2); {
+            while (rs.next()) {
+                users.add(findUserById(rs.getInt("USER_ID")));
+            }
+        }
+
+        return users;
+    }
+
+    public static GroupChat findGroup(String name) throws SQLException {
+        String a = "\"";
+        String query2 = "SELECT * from `groupm` WHERE GROUP_NAME = " + a + name + a;
+
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query2);
+        {
+            while (rs.next()) {
+                return new GroupChat(rs.getInt("GROUP_ID"), new ArrayList<User>(), new ArrayList<Chat>());
+            }
+        }
+        return null;
+    }
+
+/*    public static Integer hasAccess(User user, GroupChat groupChat) throws SQLException{
+        Integer z = 0;
+        String a = "\"";
+        String query2 = "SELECT * from `groupm` WHERE GROUP_NAME = " + a + groupChat.getGROUP_NAME() + a;
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query2);
+        {
+            while (rs.next()) {
+                if(rs.getString(""))
+            }
+        }
+
+        return z;
+    }*/
 }
 

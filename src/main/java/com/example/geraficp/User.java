@@ -17,6 +17,7 @@ public class User {
     private ArrayList<User> followers;
     private ArrayList<User> followings;
     private ArrayList<Post> posts;
+    private String profile;
 
     public ArrayList<Post> getPosts() {
         return posts;
@@ -179,5 +180,12 @@ public class User {
 
     public void setANSWER(String ANSWER) {
         this.ANSWER = ANSWER;
+    }
+
+    public String getprofile() {
+        return profile;
+    }
+    public void setprofile(String profile){
+        this.profile = profile;
     }
 }

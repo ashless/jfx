@@ -1,15 +1,21 @@
 package com.example.geraficp;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class Post {
 
     private Date CREATE_DATE_TIME;
     private Date LAST_UPDATE_DATE_TIME;
     private Integer post_Id;
     private Integer sender_Id;
+    private String address;
 
 
     private String text;

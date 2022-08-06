@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -25,6 +26,9 @@ public class loginMenu {
     private static User user;
     private Stage stage;
     private Scene scene;
+    public static Boolean c;
+    @FXML
+    CheckBox check = new CheckBox();
 
     @FXML
     private Label myLabel;
@@ -60,6 +64,13 @@ public class loginMenu {
         ProfileMenu profileMenu = new ProfileMenu();
         profileMenu.setUser(getUser());
         this.stage = HelloApplication.getInstance().getStage();
+        if(check.isSelected()) {
+            root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
+            c = true;
+        }
+        else {
+            c = false;
+        }
         scene = new Scene(root);
         myLabel.setText("ProfileMenu");
         stage.setTitle("ProfileMenu");

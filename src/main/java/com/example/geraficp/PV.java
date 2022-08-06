@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
@@ -35,18 +36,21 @@ public class PV implements Initializable {
     private User user2;
     private Scene scene;
     private Stage stage;
-    private Pane root = new Pane();
+    private Pane root;
+    private GroupChat gg;
     Timeline timeline = new Timeline();
     CheckBox c = new CheckBox();
-
+    ArrayList<Integer> counter = new ArrayList<>();
     @FXML
     private TextField gname = new TextField();
     @FXML
     private TextField find = new TextField();
     private final Button add = new Button("send");
+    private Button addm = new Button("add");
+    private TextField findm = new TextField();
     private final VBox chatBox = new VBox(5);
 
-    private final TextField ch = new TextField("message...");
+    private final TextField ch = new TextField();
     private List<Label> messages = new ArrayList<>();
     private ScrollPane container = new ScrollPane();
     private int index = 0;
@@ -75,6 +79,8 @@ public class PV implements Initializable {
         setUser(ProfileMenu.getUser());
         ArrayList<String> ff = new ArrayList<>();
         ArrayList<User> fff = new ArrayList<>();
+        ArrayList<String> ss = new ArrayList<>();
+        ArrayList<GroupChat> sss = new ArrayList<>();
 
         for (int i = 0; i < DataBaseConnection.findfollowersOfUserU(user).size(); i++){
             ff.add(DataBaseConnection.findfollowersOfUserU(user).get(i).getUSERNAME());
@@ -85,7 +91,13 @@ public class PV implements Initializable {
             ff.add(DataBaseConnection.findfollowingsOfUserU(user).get(i).getUSERNAME());
             fff.add(DataBaseConnection.findfollowingsOfUserU(user).get(i));
         }
-        String[] s = new String[ff.size()];
+        sss = DataBaseConnection.groupsOfUser(user);
+        for(int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++){
+            ss.add(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
+            System.out.println(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
+        }
+        String[] s = new String[ff.size() + ss.size()];
+        ff.addAll(ss);
         s = ff.toArray(s);
         menu_List2.getItems().addAll(s);
         menu_List2.getItems().add("back");
@@ -108,21 +120,44 @@ public class PV implements Initializable {
                             stage.show();
                             break;
                         default:
-                            int o = 0;
+                            messages.clear();
+                            chatBox.getChildren().clear();
+                            int o = ff.size();
                             for(int i = 0; i < fff.size(); i++){
                                 if(fff.get(i).getUSERNAME().equals(selectedItem1))
                                     o = i;
                             }
-                            user2 = fff.get(o);
-                            ArrayList<User> ss = new ArrayList<>();
-                            ss.add(user);
-                            ss.add(user2);
-                            gp.setUsers(ss);
-                            ArrayList<Chat> chats = DataBaseConnection.findChatOfGroup(gp);
-                            for(Chat c : chats) {
-                                messages.add(new Label(c.getTEXT()));
+                            if(o < ff.size()) {
+                                user2 = fff.get(o);
+                                ArrayList<User> ss = new ArrayList<>();
+                                ss.add(user);
+                                ss.add(user2);
+                                gp.setUsers(ss);
+                                ArrayList<Chat> chats = DataBaseConnection.findChatOfGroup(gp);
+                                for (Chat c : chats) {
+                                    if (c.getSENDER_ID() == user.getUSER_ID()) {
+                                        Label l = new Label(user.getUSERNAME() + ":" + c.getTEXT());
+                                        l.setAlignment(Pos.CENTER_LEFT);
+                                        messages.add(l);
+                                        counter.add(1);
+                                    } else {
+                                        Label l = new Label(c.getTEXT() + ":" + user2.getUSERNAME());
+                                        //l.setAlignment(Pos.CENTER_RIGHT);
+                                        l.setAlignment(Pos.TOP_RIGHT);
+                                        messages.add(l);
+                                        counter.add(2);
+                                    }
+                                }
+                                chatting();
+                                startGame();
                             }
-                            chatting();
+                            else {
+                                messages.clear();
+                                chatBox.getChildren().clear();
+                                initChatBox();
+                                gchat();
+                            }
+                            break;
                     }
                 }
                 catch (Exception e) {
@@ -135,13 +170,14 @@ public class PV implements Initializable {
         for(int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++){
             
         }
-        String[] ss = new String[fs.size()];
+        //String[] ss = new String[fs.size()];
         menu_List3.getItems().addAll(ss);
         menu_List3.getItems().add("back");
         menu_List3.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+                System.out.println(5555555);
 
                 selectedItem1 = menu_List3.getSelectionModel().getSelectedItem();
                 try {
@@ -168,16 +204,18 @@ public class PV implements Initializable {
         });
     }
     private void initChatBox() throws SQLException{
-
         container.setPrefSize(216, 400);
         container.setContent(chatBox);
-
         chatBox.getStyleClass().add("chatbox");
+    }
 
+    @SneakyThrows
+    private void chatting(){
+        initChatBox();
         add.setOnAction(evt->{
-            messages.add(new Label(ch.getText()));
+            messages.add(new Label(user.getUSERNAME() + ":" + ch.getText()));
+            counter.add(1);
             try {
-
                 Chat chat = new Chat();
                 chat.setSENDER_ID(user.getUSER_ID());
                 chat.setTEXT(ch.getText());
@@ -188,43 +226,12 @@ public class PV implements Initializable {
                 chatList.add(chat);
                 gp.setChats(chatList);
                 DataBaseConnection.addGroup(gp);
+                startGame();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            if(index%2==0){
-                messages.get(index).setAlignment(Pos.CENTER_LEFT);
-                System.out.println("1");
-
-            }else{
-
-                messages.get(index).setAlignment(Pos.CENTER_RIGHT);
-                System.out.println("2");
-
-            }
-
-            ;
-            index++;
-
         });
-
-        for(int i = 0; i < messages.size(); i++){
-            Boolean s = true;
-            for(int t = 0; t < chatBox.getChildren().size(); t++){
-                if(chatBox.getChildren().get(t).equals(messages.get(i))){
-                    s = false;
-                }
-            }
-            if(s){
-                chatBox.getChildren().add(messages.get(i));
-            }
-        }
-
-    }
-
-    @SneakyThrows
-    private void chatting(){
-        initChatBox();
+        startGame();
         ch.setAlignment(Pos.BOTTOM_CENTER);
         ch.setLayoutX(80);
         ch.setLayoutY(420);
@@ -232,15 +239,34 @@ public class PV implements Initializable {
         add.setLayoutY(420);
         stage = new Stage();
         add.setAlignment(Pos.BOTTOM_CENTER);
+        root = new Pane();
+        root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         root.getChildren().addAll(container, add, ch);
         scene = new Scene(root,300,450);
         stage.setScene(scene);
         stage.show();
     }
     public void startGame() {
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(1);
         KeyFrame keyFrame = new KeyFrame (Duration.seconds (0.015), ae -> {
             try {
+                for(int i = 0; i < messages.size(); i++){
+                    Boolean s = true;
+                    for(int t = 0; t < chatBox.getChildren().size(); t++){
+                        if(chatBox.getChildren().get(t).equals(messages.get(i))){
+                            s = false;
+                        }
+                    }
+                    if(counter.get(i)%2 == 0)
+                        messages.get(i).setAlignment(Pos.CENTER_RIGHT);
+                    else
+                        messages.get(i).setAlignment(Pos.CENTER_LEFT);
+
+                    if(s){
+                        System.out.println(messages.get(i).getAlignment());
+                        chatBox.getChildren().add(messages.get(i));
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -267,4 +293,87 @@ public class PV implements Initializable {
             System.out.println(55);
         DataBaseConnection.addGroup2(GPChat);
     }
+    @SneakyThrows
+    public void gchat(){
+
+        gg = DataBaseConnection.findGroup(selectedItem1);
+        gg.getUsers().add(user);
+        System.out.println(user.getUSER_ID());
+        for(int i = 0; i < DataBaseConnection.findChatOfGroup(gg).size(); i++){
+            messages.add(new Label(DataBaseConnection.findUserById(DataBaseConnection.findChatOfGroup(gg).
+                    get(i).getSENDER_ID()).getUSERNAME() + ":" + DataBaseConnection.findChatOfGroup(gg).get(i).getTEXT()));
+        }
+        startGame1();
+        ch.setAlignment(Pos.BOTTOM_CENTER);
+        ch.setLayoutX(80);
+        ch.setLayoutY(420);
+        add.setLayoutX(250);
+        add.setLayoutY(420);
+        addm.setLayoutX(250);
+        addm.setLayoutY(450);
+        addm.setOnAction((e)->addMember());
+        findm.setLayoutX(80);
+        findm.setLayoutY(450);
+        stage = new Stage();
+        add.setAlignment(Pos.BOTTOM_CENTER);
+        root = new Pane();
+        root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
+        root.getChildren().addAll(container, add, ch, addm, findm);
+        scene = new Scene(root,300,500);
+        stage.setScene(scene);
+        stage.show();
+        add.setOnAction(evt->{
+            messages.add(new Label(user.getUSERNAME() + ":" + ch.getText()));
+            counter.add(1);
+            try {
+                Chat chat = new Chat();
+                chat.setSENDER_ID(user.getUSER_ID());
+                chat.setTEXT(ch.getText());
+                java.util.Date javaDate = new java.util.Date();
+                java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
+                chat.setDate(mySQLDate);
+                chatList.clear();
+                chatList.add(chat);
+                gg.setChats(chatList);
+                DataBaseConnection.addGroup(gg);
+                startGame1();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    @SneakyThrows
+    private void addMember(){
+        String username = findm.getText();
+        gg.setGROUP_NAME(selectedItem1);
+        User us = DataBaseConnection.findByUsername(username);
+        DataBaseConnection.addGroup3(gg, us);
+        gg.getUsers().add(us);
+    }
+    public void startGame1() {
+        timeline.setCycleCount(1);
+        KeyFrame keyFrame = new KeyFrame (Duration.seconds (0.015), ae -> {
+            try {
+                for(int i = 0; i < messages.size(); i++){
+                    Boolean s = true;
+                    for(int t = 0; t < chatBox.getChildren().size(); t++){
+                        if(chatBox.getChildren().get(t).equals(messages.get(i))){
+                            s = false;
+                        }
+                    }
+                    if(s){
+                        System.out.println(messages.get(i).getAlignment());
+                        chatBox.getChildren().add(messages.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+        timeline.getKeyFrames().add (keyFrame);
+        timeline.play ();
+
+    }
+
 }

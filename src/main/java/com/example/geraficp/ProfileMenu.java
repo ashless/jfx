@@ -9,8 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,15 +55,22 @@ public class ProfileMenu implements Initializable {
     String selectedItem1;
     @FXML
     private Label myLabel;
+    @FXML
+    private Label username;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private Label followers;
+    @FXML
+    private Label followings;
 
-
+    @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] s = {"Add Post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "show post", "Log out"};
-
+        String[] s = {"Add Post", "show my post", "Show Tweet Of All Users", "follow", "chat", "Log out"};
+        run();
         menu_List.getItems().addAll(s);
         menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
             @Override
             public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
                 System.out.println(user.getUSERNAME());
@@ -72,13 +82,8 @@ public class ProfileMenu implements Initializable {
                             switchToPostMenu();
                             //  new PostMenu(user).runMenu();
                             break;
-                        case "Comment":
-
-                            // new CommentMenu(user).runMenu();
-                            break;
-                        case "like":
-
-                            //new LikeMenu(user).runMenu();
+                        case "show my post":
+                            switchToshowPost();
                             break;
                         case "Show Tweet Of All Users":
 
@@ -94,17 +99,10 @@ public class ProfileMenu implements Initializable {
                             switchToFollow();
                             //new FollowMenu(user).runMenu();
                             break;
-                        case "private chat":
+                        case "chat":
+                            switchToChat();
+                            break;
 
-                            // new privateChatMenu(user).runMenu();
-                            break;
-                        case "group chat":
-
-                            //    new publicChatMenu(user).runMenu();
-                            break;
-                        case "show post":
-                            switchToshowPost();
-                            break;
                         case "Log out":
 
                             return;
@@ -118,9 +116,25 @@ public class ProfileMenu implements Initializable {
             }
         });
     }
+    private void run() throws SQLException {
+        setUser(loginMenu.getUser());
+        username.setText(getUser().getUSERNAME());
+        int followersn = 0,followingsn = 0;
+        for (String s : DataBaseConnection.findfollowersOfUser(getUser())) {
+            followersn++;
+        }
+        for (String s : DataBaseConnection.findfollowingsOfUser(getUser())) {
+            followingsn++;
+        }
+        followers.setText("followers:"+Integer.toString(followersn));
+        followings.setText("followings:"+Integer.toString(followingsn));
+        imageView.setImage(new Image(getClass().getResourceAsStream("whitelike.png")));//apdatepictute
+    }
 
     private void switchToshowPost() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("showPost.fxml"));
+        if(loginMenu.c)
+            root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         showPost showPost = new showPost();
         showPost.setUser(loginMenu.getUser());
         System.out.println(user.getUSERNAME());
@@ -133,6 +147,8 @@ public class ProfileMenu implements Initializable {
 
     private void switchToPostMenu() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("PostMenu.fxml"));
+        if(loginMenu.c)
+            root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         PostMenu postMenu = new PostMenu();
         postMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
@@ -150,6 +166,8 @@ public class ProfileMenu implements Initializable {
 
     private void switchToFollow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
+        if(loginMenu.c)
+            root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         FollowMenu followMenu = new FollowMenu();
         followMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
@@ -160,7 +178,24 @@ public class ProfileMenu implements Initializable {
         stage.show();
     }
 
-    public User getUser() {
+    @SneakyThrows
+    private void switchToChat(){
+        Parent root = FXMLLoader.load(getClass().getResource("g.fxml"));
+        if(loginMenu.c)
+            root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
+        FollowMenu followMenu = new FollowMenu();
+        followMenu.setUser(loginMenu.getUser());
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        myLabel.setText("chat");
+        stage.setTitle("chat");
+        stage.setScene(scene);
+        stage.show();
+
+
+    }
+
+    public static User getUser() {
         return user;
     }
 }
