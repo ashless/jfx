@@ -12,6 +12,7 @@ public class Comment {
     private LocalDateTime lastUpdateDateTime;
     private Post tweet;
     private User user;
+    private Comment comment;
     private  Integer COMMENT_ID;
 
     public Comment(Date CREATE_DATE_TIME, Date LAST_UPDATE_DATE_TIME, String textComment, Post tweet, User user, Integer COMMENT_ID) {
@@ -22,6 +23,16 @@ public class Comment {
         this.user = user;
         this.COMMENT_ID = COMMENT_ID;
     }
+
+    public Comment(Date CREATE_DATE_TIME, Date LAST_UPDATE_DATE_TIME, String textComment, Comment comment, User user, Integer COMMENT_ID) {
+        this.LAST_UPDATE_DATE_TIME = LAST_UPDATE_DATE_TIME;
+        this.createDateTime = createDateTime;
+        this.textComment = textComment;
+        this.comment = comment;
+        this.user = user;
+        this.COMMENT_ID = COMMENT_ID;
+    }
+
 
     public Date getCREATE_DATE_TIME() {
         return CREATE_DATE_TIME;

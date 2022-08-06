@@ -285,12 +285,12 @@ public class PV implements Initializable {
     public void add(ActionEvent e){
         GroupChat GPChat = new GroupChat();
         ArrayList<User> accounts = new ArrayList<>();
+
         //accounts.add(chosenUser);
         accounts.add(user);
             GPChat.setUsers(accounts);
             GPChat.setGROUP_NAME(gname.getText());
-            System.out.println(gname.getText());
-            System.out.println(55);
+
         DataBaseConnection.addGroup2(GPChat);
     }
     @SneakyThrows
@@ -347,8 +347,16 @@ public class PV implements Initializable {
         String username = findm.getText();
         gg.setGROUP_NAME(selectedItem1);
         User us = DataBaseConnection.findByUsername(username);
-        DataBaseConnection.addGroup3(gg, us);
-        gg.getUsers().add(us);
+        Boolean f = false;
+        for(int i = 0; i < DataBaseConnection.findfollowersOfUserU(user).size(); i++){
+            if(us == DataBaseConnection.findfollowersOfUserU(user).get(i)){
+                f = true;
+            }
+        }
+        if(f) {
+            DataBaseConnection.addGroup3(gg, us);
+            gg.getUsers().add(us);
+        }
     }
     public void startGame1() {
         timeline.setCycleCount(1);

@@ -46,12 +46,12 @@
    <center>
       <AnchorPane prefHeight="320.0" prefWidth="135.0">
          <children>
-            <TextField fx:id="find" layoutX="204.0" layoutY="59.0" promptText="find user" />
-            <Button layoutX="344.0" layoutY="147.0" mnemonicParsing="false" text="find" />
-            <ListView fx:id="menu_List3" prefHeight="320.0" prefWidth="170.0" />
-            <CheckBox fx:id="s" layoutX="171.0" layoutY="5.0" mnemonicParsing="false" text="groups" />
-            <TextField fx:id="gname" layoutX="205.0" layoutY="195.0" promptText="group name" />
-            <Button layoutX="336.0" layoutY="274.0" mnemonicParsing="false" onAction="#add" text="add group" />
+            <TextField fx:id="find" layoutX="204.0" layoutY="59.0" promptText="find user" AnchorPane.leftAnchor="204.0" AnchorPane.rightAnchor="99.20000000000002" />
+            <Button layoutX="344.0" layoutY="147.0" mnemonicParsing="false" text="find" AnchorPane.leftAnchor="344.0" AnchorPane.rightAnchor="72.00000000000001" />
+            <ListView fx:id="menu_List3" prefHeight="320.0" prefWidth="170.0" AnchorPane.leftAnchor="2.8421709430404007E-14" AnchorPane.rightAnchor="282.4" />
+            <CheckBox fx:id="s" layoutX="171.0" layoutY="5.0" mnemonicParsing="false" text="groups" AnchorPane.leftAnchor="171.0" AnchorPane.rightAnchor="221.8" />
+            <TextField fx:id="gname" layoutX="205.0" layoutY="195.0" promptText="group name" AnchorPane.leftAnchor="205.00000000000003" AnchorPane.rightAnchor="98.20000000000002" />
+            <Button layoutX="336.0" layoutY="274.0" mnemonicParsing="false" onAction="#add" text="add group" AnchorPane.leftAnchor="336.0" AnchorPane.rightAnchor="44.80000000000001" />
          </children></AnchorPane>
    </center>
 </BorderPane>
