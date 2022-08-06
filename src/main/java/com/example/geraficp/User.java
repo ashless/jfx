@@ -46,7 +46,8 @@ public class User {
         this.followings = null;
     }
 
-    public User(String FIRST_NAME, String LAST_NAME, String PHONE_NUMBER, String EMAIL, Integer AGE, String business, Integer USER_ID, String USERNAME, String PASSWORD) {
+    public User(String FIRST_NAME, String LAST_NAME, String PHONE_NUMBER, String EMAIL, Integer AGE,
+                String business, Integer USER_ID, String USERNAME, String PASSWORD) {
         this.FIRST_NAME = FIRST_NAME;
         this.LAST_NAME = LAST_NAME;
         this.PHONE_NUMBER = PHONE_NUMBER;
@@ -59,7 +60,8 @@ public class User {
 
     }
 
-    public User(String FIRST_NAME, String LAST_NAME, String PHONE_NUMBER, String EMAIL, Integer AGE, String business, Integer USER_ID, String USERNAME, String PASSWORD, String ANSWER) {
+    public User(String FIRST_NAME, String LAST_NAME, String PHONE_NUMBER, String EMAIL, Integer AGE,
+                String business, Integer USER_ID, String USERNAME, String PASSWORD, String ANSWER) {
         this.FIRST_NAME = FIRST_NAME;
         this.LAST_NAME = LAST_NAME;
         this.PHONE_NUMBER = PHONE_NUMBER;

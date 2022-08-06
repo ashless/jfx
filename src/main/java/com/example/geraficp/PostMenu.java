@@ -48,12 +48,14 @@ public class PostMenu implements Initializable {
         } else {
             post.setText(caption.getText());
         }
+        post.setAddress(imageAddress.getText());
+
         java.util.Date javaDate = new java.util.Date();
         java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
         post.setCREATE_DATE_TIME(mySQLDate);
         post.setLAST_UPDATE_DATE_TIME(mySQLDate);
         post.setUser(user);
-        DataBaseConnection.addPost(post);
+        post.setPost_Id(DataBaseConnection.addPost(post));
         if (user.getBusiness().equals("B")) {
             warning.setText("your advertise post add to your account");
         } else {

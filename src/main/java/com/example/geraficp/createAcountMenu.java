@@ -33,12 +33,19 @@ public class createAcountMenu {
     private TextField lastname = new TextField();
     @FXML
     private TextField answer = new TextField();
+    @FXML
+    private TextField profileAddress = new TextField();
 
     @FXML
     private void submit(ActionEvent e) throws SQLException, IOException {
 
-        DataBaseConnection.addUser(new User(name.getText(), lastname.getText(), phone.getText(), email.getText(),
-                Integer.parseInt(age.getText()), business.getText(), username.getText(), password.getText(), answer.getText()));
+        User user = new User(name.getText(), lastname.getText(), phone.getText(), email.getText(),
+                Integer.parseInt(age.getText()), business.getText(), username.getText(), password.getText(), answer.getText());
+
+        user.setprofile(profileAddress.getText());
+
+        DataBaseConnection.addUser(user);
+        DataBaseConnection.setProfile(user,profileAddress.getText());
 
         Parent root = FXMLLoader.load(getClass().getResource("mainpage.fxml"));
         this.stage = HelloApplication.getInstance().getStage();

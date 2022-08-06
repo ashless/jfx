@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -41,6 +42,9 @@
       <Label fx:id="myLabel" prefHeight="18.0" prefWidth="615.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <AnchorPane prefHeight="320.0" prefWidth="135.0" />
+      <AnchorPane prefHeight="320.0" prefWidth="135.0">
+         <children>
+            <CheckBox fx:id="ch" layoutX="242.0" layoutY="68.0" mnemonicParsing="false" text="CheckBox" />
+         </children></AnchorPane>
    </center>
 </BorderPane>

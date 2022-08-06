@@ -52,6 +52,7 @@
             <TextField fx:id="age" layoutX="203.0" layoutY="107.0" promptText="age" AnchorPane.leftAnchor="203.00000000000003" AnchorPane.rightAnchor="100.20000000000002" />
             <TextField fx:id="business" layoutX="-110.0" layoutY="107.0" promptText="Business" AnchorPane.leftAnchor="-110.0" AnchorPane.rightAnchor="413.0" />
             <TextField fx:id="answer" layoutX="-110.0" layoutY="133.0" promptText="favorite food" AnchorPane.leftAnchor="-110.0" AnchorPane.rightAnchor="413.0" />
+            <TextField fx:id="profileAddress" layoutX="204.0" layoutY="133.0" promptText="profileAddress" />
          </children></AnchorPane>
    </center>
 </BorderPane>

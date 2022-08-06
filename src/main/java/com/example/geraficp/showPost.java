@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 public class showPost implements Initializable {
 
     private static User user;
-    private Post post;
+    private static Post post;
     //ImageView is a Node used for painting images loaded with Images
 
     // Image = picture
@@ -48,17 +48,20 @@ public class showPost implements Initializable {
     public void select() {
         int i = 0, j = 0, z = 1;
         try {
-            for (Post post : DataBaseConnection.findPostsOfUser(user)) {
-                Image image = new Image(getClass().getResourceAsStream("1.jpg"));//address aks update beshe
+            for (Post post1 : DataBaseConnection.findPostsOfUser(user)) {
+                System.out.println(post1.getPost_Id());
+                System.out.println(DataBaseConnection.getPic(post1));
+                Image image = new Image(getClass().getResourceAsStream(DataBaseConnection.getPic(post1)));//address aks update beshe
                 ImageView imageView = new ImageView(image);
                 imageView.setPreserveRatio(true);
                 imageView.setFitWidth(150);
                 imageView.setFitHeight(100);
-                setPost(post);
+
                 imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent t) {
                         try {
+                            setPost(post1);
                             switchToopenPost(getPost());
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -99,7 +102,7 @@ public class showPost implements Initializable {
         this.user = user;
     }
 
-    public Post getPost() {
+    public static Post getPost() {
         return post;
     }
 

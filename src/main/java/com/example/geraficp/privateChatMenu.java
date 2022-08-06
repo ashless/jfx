@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -22,6 +23,16 @@ public class privateChatMenu implements Initializable {
     private User user;
     private Scene scene;
     private Stage stage;
+    @FXML
+    public static CheckBox ch = new CheckBox();
+
+    public static CheckBox getCh() {
+        return ch;
+    }
+
+    public static void setCh(CheckBox ch) {
+        privateChatMenu.ch = ch;
+    }
 
     public privateChatMenu(){
 
@@ -52,7 +63,7 @@ public class privateChatMenu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] s = {"private chat", "group chat", "back"};
+        String[] s = {"chat", "back"};
         setUser(ProfileMenu.getUser());
         System.out.println(user.getUSERNAME());
         menu_List.getItems().addAll(s);
@@ -65,18 +76,8 @@ public class privateChatMenu implements Initializable {
                 try {
                     switch (selectedItem1) {
 
-                        case "private chat":
+                        case "chat":
                             Parent root = FXMLLoader.load(getClass().getResource("g.fxml"));
-                            new FollowMenu(user);
-                            stage = HelloApplication.getInstance().getStage();
-                            scene = new Scene(root);
-                            myLabel.setText("pv");
-                            stage.setTitle("pv");
-                            stage.setScene(scene);
-                            stage.show();
-                            break;
-                        case "group chat":
-                            root = FXMLLoader.load(getClass().getResource("g.fxml"));
                             new FollowMenu(user);
                             stage = HelloApplication.getInstance().getStage();
                             scene = new Scene(root);

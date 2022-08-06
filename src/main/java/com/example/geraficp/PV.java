@@ -92,9 +92,12 @@ public class PV implements Initializable {
             fff.add(DataBaseConnection.findfollowingsOfUserU(user).get(i));
         }
         sss = DataBaseConnection.groupsOfUser(user);
-        for(int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++){
-            ss.add(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
-            System.out.println(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
+        if(privateChatMenu.ch.isSelected()) {
+
+            for (int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++) {
+                ss.add(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
+                System.out.println(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
+            }
         }
         String[] s = new String[ff.size() + ss.size()];
         ff.addAll(ss);
@@ -152,10 +155,11 @@ public class PV implements Initializable {
                                 startGame();
                             }
                             else {
-                                messages.clear();
-                                chatBox.getChildren().clear();
-                                initChatBox();
-                                gchat();
+                                    messages.clear();
+                                    chatBox.getChildren().clear();
+                                    initChatBox();
+                                    gchat();
+
                             }
                             break;
                     }
@@ -168,7 +172,7 @@ public class PV implements Initializable {
         });
         ArrayList<GroupChat> fs = new ArrayList<>();
         for(int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++){
-            
+
         }
         //String[] ss = new String[fs.size()];
         menu_List3.getItems().addAll(ss);
@@ -257,10 +261,15 @@ public class PV implements Initializable {
                             s = false;
                         }
                     }
-                    if(counter.get(i)%2 == 0)
+
+                    if(counter.get(i)%2 == 0) {
                         messages.get(i).setAlignment(Pos.CENTER_RIGHT);
+                    }
                     else
                         messages.get(i).setAlignment(Pos.CENTER_LEFT);
+                    if(i == messages.size() - 1){
+                        messages.get(i).setAlignment(Pos.CENTER);
+                    }
 
                     if(s){
                         System.out.println(messages.get(i).getAlignment());
@@ -288,8 +297,8 @@ public class PV implements Initializable {
 
         //accounts.add(chosenUser);
         accounts.add(user);
-            GPChat.setUsers(accounts);
-            GPChat.setGROUP_NAME(gname.getText());
+        GPChat.setUsers(accounts);
+        GPChat.setGROUP_NAME(gname.getText());
 
         DataBaseConnection.addGroup2(GPChat);
     }
@@ -298,7 +307,6 @@ public class PV implements Initializable {
 
         gg = DataBaseConnection.findGroup(selectedItem1);
         gg.getUsers().add(user);
-        System.out.println(user.getUSER_ID());
         for(int i = 0; i < DataBaseConnection.findChatOfGroup(gg).size(); i++){
             messages.add(new Label(DataBaseConnection.findUserById(DataBaseConnection.findChatOfGroup(gg).
                     get(i).getSENDER_ID()).getUSERNAME() + ":" + DataBaseConnection.findChatOfGroup(gg).get(i).getTEXT()));
@@ -368,6 +376,9 @@ public class PV implements Initializable {
                         if(chatBox.getChildren().get(t).equals(messages.get(i))){
                             s = false;
                         }
+                    }
+                    if(i == messages.size() - 1){
+                        messages.get(i).setAlignment(Pos.CENTER);
                     }
                     if(s){
                         System.out.println(messages.get(i).getAlignment());

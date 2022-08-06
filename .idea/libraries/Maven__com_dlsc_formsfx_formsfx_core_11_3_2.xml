@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/dlsc/formsfx/formsfx-core/11.3.2/formsfx-core-11.3.2.jar!/" />
       <root url="jar://$USER_HOME$/Desktop/mysql-connector-java-8.0.29.jar!/" />
+      <root url="jar://E:/mysql-connector-java-8.0.29.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/com/dlsc/formsfx/formsfx-core/11.3.2/formsfx-core-11.3.2-javadoc.jar!/" />

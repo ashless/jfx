@@ -104,8 +104,7 @@ public class ProfileMenu implements Initializable {
                             break;
 
                         case "Log out":
-
-                            return;
+                            switchTomainpage();
 
 
                     }
@@ -116,24 +115,37 @@ public class ProfileMenu implements Initializable {
             }
         });
     }
+
+    private void switchTomainpage() throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("mainpage.fxml"));
+        this.stage = HelloApplication.getInstance().getStage();
+        scene = new Scene(root);
+        stage.setTitle("main page");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     private void run() throws SQLException {
         setUser(loginMenu.getUser());
         username.setText(getUser().getUSERNAME());
-        int followersn = 0,followingsn = 0;
+        int followersn = 0, followingsn = 0;
         for (String s : DataBaseConnection.findfollowersOfUser(getUser())) {
             followersn++;
         }
         for (String s : DataBaseConnection.findfollowingsOfUser(getUser())) {
             followingsn++;
         }
-        followers.setText("followers:"+Integer.toString(followersn));
-        followings.setText("followings:"+Integer.toString(followingsn));
-        imageView.setImage(new Image(getClass().getResourceAsStream("whitelike.png")));//apdatepictute
+
+        followers.setText("followers:" + Integer.toString(followersn));
+        followings.setText("followings:" + Integer.toString(followingsn));
+        if(!(DataBaseConnection.getProfile(user) == null))
+            imageView.setImage(new Image(getClass().getResourceAsStream(DataBaseConnection.getProfile(user))));//apdatepictute
     }
 
     private void switchToshowPost() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("showPost.fxml"));
-        if(loginMenu.c)
+        if (loginMenu.c)
             root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         showPost showPost = new showPost();
         showPost.setUser(loginMenu.getUser());
@@ -147,7 +159,7 @@ public class ProfileMenu implements Initializable {
 
     private void switchToPostMenu() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("PostMenu.fxml"));
-        if(loginMenu.c)
+        if (loginMenu.c)
             root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         PostMenu postMenu = new PostMenu();
         postMenu.setUser(loginMenu.getUser());
@@ -166,7 +178,7 @@ public class ProfileMenu implements Initializable {
 
     private void switchToFollow() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FollowMenu.fxml"));
-        if(loginMenu.c)
+        if (loginMenu.c)
             root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         FollowMenu followMenu = new FollowMenu();
         followMenu.setUser(loginMenu.getUser());
@@ -179,9 +191,9 @@ public class ProfileMenu implements Initializable {
     }
 
     @SneakyThrows
-    private void switchToChat(){
-        Parent root = FXMLLoader.load(getClass().getResource("g.fxml"));
-        if(loginMenu.c)
+    private void switchToChat() {
+        Parent root = FXMLLoader.load(getClass().getResource("chat.fxml"));
+        if (loginMenu.c)
             root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         FollowMenu followMenu = new FollowMenu();
         followMenu.setUser(loginMenu.getUser());

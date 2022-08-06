@@ -82,6 +82,7 @@ public class openPost implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setUser(loginMenu.getUser());
+        setPost(showPost.getPost());
         try {
             System.out.println(user.getUSERNAME());
             run();
@@ -92,6 +93,7 @@ public class openPost implements Initializable {
         }
 
     }
+
     private boolean isIn(User user, List<User> likes) {
         for (User user1 : likes) {
             if (user1.equals(user))
@@ -99,24 +101,27 @@ public class openPost implements Initializable {
         }
         return false;
     }
+
     private void run() throws SQLException, IOException {
         username.setText(getUser().getUSERNAME());
-        Image image = new Image(getClass().getResourceAsStream("1.jpg"));//adress aks porof yaro
+        Image image = new Image(getClass().getResourceAsStream(DataBaseConnection.getPic(post)));//adress aks porof yaro
         postimage.setImage(image);
+        user_picture.setImage(new Image(getClass().getResourceAsStream(DataBaseConnection.getProfile(user))));
         Image image1 = new Image(getClass().getResourceAsStream("whitelike.png"));
         Image image2 = new Image(getClass().getResourceAsStream("whitelike.png"));
-      //  if (!getPost().getText().equals(null)) {
-     //       caption.setText(post.getText());
-       // }
-        //List<User> likes = DataBaseConnection.findLikes(post);
-        //boolean isLiked = isIn(user, likes);
-/*        if (isLiked) {
+        if (!getPost().getText().equals(null)) {
+            caption.setText(post.getText());
+        }
+        List<User> likes = DataBaseConnection.findLikes(post);
+        boolean isLiked = isIn(user, likes);
+
+        if (isLiked) {
             post.getLikes().remove(user);
             like.setImage(image1);
         } else {
             post.getLikes().add(user);
             like.setImage(image2);
-        }*/
+        }
         java.util.Date javaDate = new java.util.Date();
         java.util.Date mySQLDate = new java.sql.Date(javaDate.getTime());
 
@@ -127,7 +132,7 @@ public class openPost implements Initializable {
             public void handle(MouseEvent mouseEvent) {
                 List<User> likes = null;
                 try {
-                    //likes = DataBaseConnection.findLikes(post);
+                    likes = DataBaseConnection.findLikes(post);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -169,12 +174,12 @@ public class openPost implements Initializable {
         if (!DataBaseConnection.findAllComment(post).equals(null)) {
             for (Comment comment : DataBaseConnection.findAllComment(post)) {
                 TreeItem<String> rootItem0 = new TreeItem<>(comment.getTextComment());
-              /*  if (!DataBaseConnection.findAllCommentofcomment(comment).equals(null)) {
-                    for (Comment comment1 : DataBaseConnection.findAllCommentofcomment(comment)) {
+              if (!DataBaseConnection.findAllComment(comment).equals(null)) {
+                    for (Comment comment1 : DataBaseConnection.findAllComment(comment)) {
                         TreeItem<String> rootItem1 = new TreeItem<>(comment1.getTextComment());
                         rootItem0.getChildren().add(rootItem1);
                     }
-                }  */
+                }
                 rootItem.getChildren().add(rootItem0);
             }
         }

@@ -58,7 +58,7 @@ public class DataBaseConnection {
         preparedStmt.execute();
     }
 
-    public static void addPost(Post post) throws SQLException {
+    public static Integer addPost(Post post) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         String query = "insert into posts values (?, ?, ?, ?, ?, ?)";
@@ -75,6 +75,7 @@ public class DataBaseConnection {
         preparedStmt.setInt(5, post.getUser().getUSER_ID());
         preparedStmt.setString(6,post.getAddress());
         preparedStmt.execute();
+        return count + 1;
     }
 
     public static void follow(User follower, User followed) throws SQLException {
@@ -173,28 +174,28 @@ public class DataBaseConnection {
             //System.out.println(pass);
             if (Password.equals(pass)) {
 
-                    String FIRST_NAME = "";
-                    String LAST_NAME = "";
-                    String PHONE_NUMBER = "";
-                    String EMAIL = "";
-                    Integer AGE = 0;
-                    String Business = "";
-                    Integer USER_ID = 0;
-                    String USERNAME = "";
-                    String PASSWORD = "";
+                String FIRST_NAME = "";
+                String LAST_NAME = "";
+                String PHONE_NUMBER = "";
+                String EMAIL = "";
+                Integer AGE = 0;
+                String Business = "";
+                Integer USER_ID = 0;
+                String USERNAME = "";
+                String PASSWORD = "";
 
-                        FIRST_NAME = rs1.getString("FIRST_NAME");
-                        LAST_NAME = rs1.getString("LAST_NAME");
-                        PHONE_NUMBER = rs1.getString("PHONE_NUMBER");
-                        EMAIL = rs1.getString("EMAIL");
-                        AGE = rs1.getInt("AGE");
-                        Business = rs1.getString("Business");
-                        USER_ID = rs1.getInt("ID");
-                        USERNAME = rs1.getString("USERNAME");
-                        PASSWORD = rs1.getString("PASSWORD");
+                FIRST_NAME = rs1.getString("FIRST_NAME");
+                LAST_NAME = rs1.getString("LAST_NAME");
+                PHONE_NUMBER = rs1.getString("PHONE_NUMBER");
+                EMAIL = rs1.getString("EMAIL");
+                AGE = rs1.getInt("AGE");
+                Business = rs1.getString("Business");
+                USER_ID = rs1.getInt("ID");
+                USERNAME = rs1.getString("USERNAME");
+                PASSWORD = rs1.getString("PASSWORD");
 
 
-                    return new User(FIRST_NAME, LAST_NAME, PHONE_NUMBER, EMAIL, AGE, Business, USER_ID, USERNAME, PASSWORD);
+                return new User(FIRST_NAME, LAST_NAME, PHONE_NUMBER, EMAIL, AGE, Business, USER_ID, USERNAME, PASSWORD);
 
 
             }
@@ -644,7 +645,7 @@ public class DataBaseConnection {
 
     public static ArrayList<User> findLikes(Post post) throws SQLException {
         String sql = "SELECT * FROM likes where POST_ID = " + post.getPost_Id();
-        ArrayList<User> ss =new ArrayList<>();
+        ArrayList<User> ss = new ArrayList<>();
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
 
@@ -728,7 +729,7 @@ public class DataBaseConnection {
         while (rs.next()) {
             setA.add(rs.getInt("GROUP_ID"));
         }
-        preparedStmt.setInt(1, groupChat.getGROUP_ID());
+        preparedStmt.setInt(1, setA.size() + 1);
         preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
         preparedStmt.setString(3, groupChat.getGROUP_NAME());
         preparedStmt.setString(4, "N");
@@ -742,7 +743,6 @@ public class DataBaseConnection {
         String quer = "select count(*) from `groupm` ";
         int count;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data", username, password);
-
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(quer)) {
             rs.next();
@@ -800,7 +800,16 @@ public class DataBaseConnection {
     }
 
     public static ArrayList<Chat> findChatOfGroup(GroupChat groupChat) throws SQLException {
-        String sql = "SELECT * FROM `groups` where GROUP_ID = " + chatExist(groupChat);
+        String sql;
+
+        if(groupChat.getUsers().size() == 2) {
+            sql = "SELECT * FROM `groups` where GROUP_ID = " + chatExist(groupChat);
+
+        }
+        else {
+            sql = "SELECT * FROM `groups` where GROUP_ID = " + groupChat.getGROUP_ID();
+
+        }
         String quer = "select count(*) from `groups`";
         ArrayList<Chat> groups = new ArrayList<>();
         int count;
@@ -977,7 +986,7 @@ public class DataBaseConnection {
         return f;
     }
 
-    public static ArrayList<GroupChat> groupChatsOfUser(User user) throws SQLException{
+    public static ArrayList<GroupChat> groupChatsOfUser(User user) throws SQLException {
         ArrayList<GroupChat> gps = new ArrayList<>();
         String quer = "select GROUP_ID from groupm where USER_ID = " + user.getUSER_ID();
         String query2 = "SELECT * from `groupm` WHERE GROUP_ID = ";
@@ -1004,7 +1013,7 @@ public class DataBaseConnection {
         return gps;
     }
 
-    public static ArrayList<GroupChat> groupsOfUser(User user) throws SQLException{
+    public static ArrayList<GroupChat> groupsOfUser(User user) throws SQLException {
         ArrayList<GroupChat> ss = new ArrayList<>();
         String query2 = "SELECT * from `groupm` WHERE USER_ID = " + user.getUSER_ID();
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
@@ -1012,7 +1021,7 @@ public class DataBaseConnection {
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(query2)) {
             while (rs.next()) {
-                if(!(rs.getString("GROUP_NAME") == null)){
+                if (!(rs.getString("GROUP_NAME") == null)) {
                     ArrayList<User> kk = new ArrayList<>();
                     kk.add(user);
                     GroupChat g = new GroupChat(rs.getInt("GROUP_ID"), kk, new ArrayList<Chat>());
@@ -1024,6 +1033,7 @@ public class DataBaseConnection {
         }
         return ss;
     }
+
     public static void like(Comment comment, Integer id, Date date) throws SQLException {
 
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
@@ -1035,9 +1045,10 @@ public class DataBaseConnection {
         preparedStmt.setDate(3, date);
         preparedStmt.execute();
     }
+
     public static ArrayList<User> findLikes(Comment comment) throws SQLException {
         String sql = "SELECT * FROM likesc where POST_ID = " + comment.getCOMMENT_ID();
-        ArrayList<User> ss =new ArrayList<>();
+        ArrayList<User> ss = new ArrayList<>();
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
 
@@ -1050,6 +1061,7 @@ public class DataBaseConnection {
 
         return ss;
     }
+
     public static void comment(Comment comment, User user, String text, Date date) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
@@ -1071,11 +1083,13 @@ public class DataBaseConnection {
         preparedStmt.execute();
 
     }
-    public static void addToGroup(User user) throws SQLException{
+
+    public static void addToGroup(User user) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
 
     }
+
     public static void addGroup3(GroupChat groupChat, User user) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
@@ -1101,14 +1115,15 @@ public class DataBaseConnection {
 
     }
 
-    public static ArrayList<User> findUsersOfGroup(GroupChat groupChat) throws SQLException{
+    public static ArrayList<User> findUsersOfGroup(GroupChat groupChat) throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         String query2 = "SELECT * from `groupm` WHERE GROUP_ID = " + groupChat.getGROUP_ID();
 
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery(query2); {
+        ResultSet rs = stmt.executeQuery(query2);
+        {
             while (rs.next()) {
                 users.add(findUserById(rs.getInt("USER_ID")));
             }
@@ -1133,7 +1148,7 @@ public class DataBaseConnection {
         return null;
     }
 
-    public static void insertPic(String address) throws SQLException{
+    public static void insertPic(String address) throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         String query = "insert into posts address values (?)";
@@ -1141,7 +1156,8 @@ public class DataBaseConnection {
         preparedStmt.setString(1, address);
         preparedStmt.execute();
     }
-    public static ArrayList<String> getPic(User user) throws SQLException{
+
+    public static ArrayList<String> getPic(User user) throws SQLException {
         String a = "\"";
         String s;
         ArrayList<String> ss = new ArrayList<>();
@@ -1158,31 +1174,23 @@ public class DataBaseConnection {
         return ss;
     }
 
-    public static void setProfile(User user, String string) throws SQLException{
-        String a = "\"";
-        String query = "insert into users profile values (?) where USERNAME = " + a + user.getUSERNAME() + a;
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
-                username, password);
-        PreparedStatement preparedStmt = con.prepareStatement(query);
-        preparedStmt.setString(1, string);
-        preparedStmt.execute();
-    }
-    public static String getProfile(User user) throws SQLException{
+    public static String getPic(Post post) throws SQLException {
         String a = "\"";
         String s;
-        String query2 = "SELECT * from `users` WHERE USER_ID = " + a + user.getUSER_ID() + a;
+        ArrayList<String> ss = new ArrayList<>();
+        String query2 = "SELECT * from posts WHERE ID = " + a + post.getPost_Id() + a;
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
                 username, password);
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(query2);
         {
             while (rs.next()) {
-                return rs.getString("profile");
+                return rs.getString("address");
             }
         }
         return null;
-
     }
+
     public static ArrayList<Comment> findAllComment(Comment post) throws SQLException {
         String sql = "SELECT * FROM commentsc";
         ArrayList<Comment> comments = new ArrayList<>();
@@ -1201,6 +1209,33 @@ public class DataBaseConnection {
         }
 
         return comments;
+    }
+
+    public static void setProfile(User user, String string) throws SQLException {
+        String a = "\"";
+        String query = "UPDATE users SET profile = (?) WHERE USERNAME = " + a + user.getUSERNAME() + a;
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        PreparedStatement preparedStmt = con.prepareStatement(query);
+        preparedStmt.setString(1, string);
+        preparedStmt.execute();
+    }
+
+    public static String getProfile(User user) throws SQLException {
+        String a = "\"";
+        String s;
+        String query2 = "SELECT * from `users` WHERE ID = " + a + user.getUSER_ID() + a;
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/data",
+                username, password);
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(query2);
+        {
+            while (rs.next()) {
+                return rs.getString("profile");
+            }
+        }
+        return null;
+
     }
 
 
