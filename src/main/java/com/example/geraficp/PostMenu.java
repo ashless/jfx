@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class PostMenu implements Initializable {
-    private  static User user;
+    private static User user;
     private Stage stage;
     private Scene scene;
 
@@ -24,6 +24,10 @@ public class PostMenu implements Initializable {
 
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setUser(ProfileMenu.getUser());
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -54,12 +58,14 @@ public class PostMenu implements Initializable {
         java.sql.Date mySQLDate = new java.sql.Date(javaDate.getTime());
         post.setCREATE_DATE_TIME(mySQLDate);
         post.setLAST_UPDATE_DATE_TIME(mySQLDate);
+        System.out.println("to add :"+user);
         post.setUser(user);
         post.setPost_Id(DataBaseConnection.addPost(post));
+        System.out.println("to add post:"+post);
         if (user.getBusiness().equals("B")) {
             warning.setText("your advertise post add to your account");
         } else {
-           warning.setText("your post add to your account");
+            warning.setText("your post add to your account");
         }
         switchToprofileMenu();
     }
@@ -68,7 +74,7 @@ public class PostMenu implements Initializable {
     public void switchToprofileMenu() throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("ProfileMenu.fxml"));
-        ProfileMenu profileMenu=new ProfileMenu();
+        ProfileMenu profileMenu = new ProfileMenu();
         profileMenu.setUser(loginMenu.getUser());
         this.stage = HelloApplication.getInstance().getStage();
         scene = new Scene(root);
@@ -79,10 +85,6 @@ public class PostMenu implements Initializable {
 
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
 }
 
 

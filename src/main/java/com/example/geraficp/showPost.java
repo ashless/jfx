@@ -49,36 +49,39 @@ public class showPost implements Initializable {
         int i = 0, j = 0, z = 1;
         try {
             for (Post post1 : DataBaseConnection.findPostsOfUser(user)) {
-                System.out.println(post1.getPost_Id());
-                System.out.println(DataBaseConnection.getPic(post1));
-                Image image = new Image(getClass().getResourceAsStream(DataBaseConnection.getPic(post1)));//address aks update beshe
-                ImageView imageView = new ImageView(image);
-                imageView.setPreserveRatio(true);
-                imageView.setFitWidth(150);
-                imageView.setFitHeight(100);
+                if ((DataBaseConnection.getPic(post1) != null)) {
+                    System.out.println(post1.getPost_Id());
+                    System.out.println(DataBaseConnection.getPic(post1));
+                    Image image = new Image(getClass().getResourceAsStream(DataBaseConnection.getPic(post1)));//address aks update beshe
+                    ImageView imageView = new ImageView(image);
+                    imageView.setPreserveRatio(true);
+                    imageView.setFitWidth(150);
+                    imageView.setFitHeight(100);
 
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent t) {
-                        try {
-                            setPost(post1);
-                            switchToopenPost(getPost());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent t) {
+                            try {
+                                setPost(post1);
+                                switchToopenPost(getPost());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
+                    });
+                    gridpane.add(imageView, j, i);
+                    j++;
+                    z++;
+                    if (j > 3) {
+                        j = 0;
+                        i++;
                     }
-                });
-                gridpane.add(imageView, j, i);
-                j++;
-                z++;
-                if (j > 3) {
-                    j = 0;
-                    i++;
+
+
                 }
-
-
             }
-        } catch (SQLException e) {
+        }
+            catch (SQLException e) {
             e.printStackTrace();
         }
     }

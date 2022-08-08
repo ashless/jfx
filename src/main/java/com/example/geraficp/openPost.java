@@ -81,8 +81,14 @@ public class openPost implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setUser(loginMenu.getUser());
+
         setPost(showPost.getPost());
+        System.out.println(post);
+        try {
+            setUser(DataBaseConnection.findUserById(post.getSender_Id()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             System.out.println(user.getUSERNAME());
             run();
@@ -103,30 +109,15 @@ public class openPost implements Initializable {
     }
 
     private void run() throws SQLException, IOException {
-        username.setText(getUser().getUSERNAME());
+        username.setText(user.getUSERNAME());
         Image image = new Image(getClass().getResourceAsStream(DataBaseConnection.getPic(post)));//adress aks porof yaro
         postimage.setImage(image);
         user_picture.setImage(new Image(getClass().getResourceAsStream(DataBaseConnection.getProfile(user))));
         Image image1 = new Image(getClass().getResourceAsStream("whitelike.png"));
-        Image image2 = new Image(getClass().getResourceAsStream("whitelike.png"));
+        Image image2 = new Image(getClass().getResourceAsStream("redlike.png"));
         if (!getPost().getText().equals(null)) {
             caption.setText(post.getText());
         }
-        List<User> likes = DataBaseConnection.findLikes(post);
-        boolean isLiked = isIn(user, likes);
-
-        if (isLiked) {
-            post.getLikes().remove(user);
-            like.setImage(image1);
-        } else {
-            post.getLikes().add(user);
-            like.setImage(image2);
-        }
-        java.util.Date javaDate = new java.util.Date();
-        java.util.Date mySQLDate = new java.sql.Date(javaDate.getTime());
-
-        DataBaseConnection.like(post, post.getSender_Id(), (java.sql.Date) mySQLDate);
-
         like.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -154,7 +145,18 @@ public class openPost implements Initializable {
                 }
             }
         });
-        TreeItem<String> rootItem = new TreeItem<>("comments");
+        List<User> likes = DataBaseConnection.findLikes(post);
+        boolean isLiked = isIn(user, likes);
+        if (isLiked) {
+            like.setImage(image2);
+        } else {
+            like.setImage(image1);
+        }
+        System.out.println("salam");
+        TreeItem<String> rootItemmain = new TreeItem<>("more INFO");
+        TreeItem<String> rootItemc = new TreeItem<>("comments");
+        TreeItem<String> rootIteml = new TreeItem<>("likes");
+
         add.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -167,24 +169,31 @@ public class openPost implements Initializable {
                         e.printStackTrace();
                     }
                     TreeItem<String> rootItem2 = new TreeItem<>(comment.getText());
-                    rootItem.getChildren().add(rootItem2);
+                    rootItemc.getChildren().add(rootItem2);
                 }
             }
         });
         if (!DataBaseConnection.findAllComment(post).equals(null)) {
             for (Comment comment : DataBaseConnection.findAllComment(post)) {
                 TreeItem<String> rootItem0 = new TreeItem<>(comment.getTextComment());
-              if (!DataBaseConnection.findAllComment(comment).equals(null)) {
+                if (!DataBaseConnection.findAllComment(comment).equals(null)) {
                     for (Comment comment1 : DataBaseConnection.findAllComment(comment)) {
                         TreeItem<String> rootItem1 = new TreeItem<>(comment1.getTextComment());
                         rootItem0.getChildren().add(rootItem1);
                     }
                 }
-                rootItem.getChildren().add(rootItem0);
+                rootItemc.getChildren().add(rootItem0);
             }
         }
-        treeView.setRoot(rootItem);
 
+        if (!DataBaseConnection.findLikes(post).equals(null)) {
+            for (User user2 :DataBaseConnection.findLikes(post)) {
+                TreeItem<String> rootItem0 = new TreeItem<>(user2.getUSERNAME());
+                rootIteml.getChildren().add(rootItem0);
+            }
+        }
+        rootItemmain.getChildren().addAll(rootItemc,rootIteml);
+        treeView.setRoot(rootItemmain);
         back.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {

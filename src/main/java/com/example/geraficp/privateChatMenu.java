@@ -24,15 +24,9 @@ public class privateChatMenu implements Initializable {
     private Scene scene;
     private Stage stage;
     @FXML
-    public static CheckBox ch = new CheckBox();
+    public CheckBox ch = new CheckBox();
+    public static Boolean sss = false;
 
-    public static CheckBox getCh() {
-        return ch;
-    }
-
-    public static void setCh(CheckBox ch) {
-        privateChatMenu.ch = ch;
-    }
 
     public privateChatMenu(){
 
@@ -66,6 +60,7 @@ public class privateChatMenu implements Initializable {
         String[] s = {"chat", "back"};
         setUser(ProfileMenu.getUser());
         System.out.println(user.getUSERNAME());
+
         menu_List.getItems().addAll(s);
         menu_List.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
@@ -77,7 +72,13 @@ public class privateChatMenu implements Initializable {
                     switch (selectedItem1) {
 
                         case "chat":
+                            System.out.println(ch.isSelected());
+                            if(ch.isSelected()){
+                                sss = true;
+                            }
                             Parent root = FXMLLoader.load(getClass().getResource("g.fxml"));
+                            if (loginMenu.c)
+                                root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
                             new FollowMenu(user);
                             stage = HelloApplication.getInstance().getStage();
                             scene = new Scene(root);

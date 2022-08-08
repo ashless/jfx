@@ -14,6 +14,7 @@
    <left>
       <VBox prefHeight="320.0" prefWidth="163.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
+            <CheckBox fx:id="ch" mnemonicParsing="false" text="CheckBox" />
             <ListView fx:id="menu_List" prefHeight="336.0" prefWidth="163.0" />
          </children></VBox>
    </left>
@@ -42,9 +43,6 @@
       <Label fx:id="myLabel" prefHeight="18.0" prefWidth="615.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <AnchorPane prefHeight="320.0" prefWidth="135.0">
-         <children>
-            <CheckBox fx:id="ch" layoutX="242.0" layoutY="68.0" mnemonicParsing="false" text="CheckBox" />
-         </children></AnchorPane>
+      <AnchorPane prefHeight="320.0" prefWidth="135.0" />
    </center>
 </BorderPane>

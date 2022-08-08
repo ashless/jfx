@@ -12,8 +12,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -44,7 +47,7 @@ public class PV implements Initializable {
     @FXML
     private TextField gname = new TextField();
     @FXML
-    private TextField find = new TextField();
+    private TextField finda = new TextField();
     private final Button add = new Button("send");
     private Button addm = new Button("add");
     private TextField findm = new TextField();
@@ -92,11 +95,10 @@ public class PV implements Initializable {
             fff.add(DataBaseConnection.findfollowingsOfUserU(user).get(i));
         }
         sss = DataBaseConnection.groupsOfUser(user);
-        if(privateChatMenu.ch.isSelected()) {
-
+        System.out.println(privateChatMenu.sss);
+        if(privateChatMenu.sss) {
             for (int i = 0; i < DataBaseConnection.groupsOfUser(user).size(); i++) {
                 ss.add(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
-                System.out.println(DataBaseConnection.groupsOfUser(user).get(i).getGROUP_NAME());
             }
         }
         String[] s = new String[ff.size() + ss.size()];
@@ -241,11 +243,31 @@ public class PV implements Initializable {
         ch.setLayoutY(420);
         add.setLayoutX(250);
         add.setLayoutY(420);
+        ImageView user_picture = new ImageView();
         stage = new Stage();
+        if(!(DataBaseConnection.getProfile(user) == null)){
+            user_picture.setImage(new Image(getClass().getResourceAsStream(DataBaseConnection.getProfile(user))));
+            user_picture.setX(220);
+            user_picture.setY(40);
+            user_picture.setPreserveRatio(true);
+            user_picture.setFitWidth(80);
+            user_picture.setFitHeight(80);
+        }
+        else{
+            user_picture.setImage(new Image(getClass().getResourceAsStream("3.jpg")));
+            user_picture.setX(220);
+            user_picture.setY(40);
+            user_picture.setPreserveRatio(true);
+            user_picture.setFitWidth(80);
+            user_picture.setFitHeight(80);
+        }
         add.setAlignment(Pos.BOTTOM_CENTER);
         root = new Pane();
+        Text text = new Text(user2.getUSERNAME());
+        text.setLayoutX(250);
+        text.setLayoutY(20);
         root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
-        root.getChildren().addAll(container, add, ch);
+        root.getChildren().addAll(container, add, ch, text, user_picture);
         scene = new Scene(root,300,450);
         stage.setScene(scene);
         stage.show();
@@ -287,7 +309,10 @@ public class PV implements Initializable {
     }
 
     public void find(){
-
+        User u = DataBaseConnection.findByUsername(finda.getText());
+        if(!(u == null)){
+            menu_List2.getItems().add(u.getUSERNAME());
+        }
     }
 
     @SneakyThrows
@@ -306,13 +331,27 @@ public class PV implements Initializable {
     public void gchat(){
 
         gg = DataBaseConnection.findGroup(selectedItem1);
-        gg.getUsers().add(user);
+        gg.setUsers(DataBaseConnection.findUsersOfGroup(gg));
         for(int i = 0; i < DataBaseConnection.findChatOfGroup(gg).size(); i++){
             messages.add(new Label(DataBaseConnection.findUserById(DataBaseConnection.findChatOfGroup(gg).
                     get(i).getSENDER_ID()).getUSERNAME() + ":" + DataBaseConnection.findChatOfGroup(gg).get(i).getTEXT()));
+            counter.add(DataBaseConnection.findChatOfGroup(gg).get(i).getSENDER_ID());
         }
         startGame1();
+        Text text = new Text(gg.getGROUP_NAME());
+        text.setLayoutX(245);
+        text.setLayoutY(20);
+        Text text2 = new Text(Integer.toString(gg.getUsers().size()));
+        text2.setLayoutX(250);
+        text2.setLayoutY(10);
         ch.setAlignment(Pos.BOTTOM_CENTER);
+        ImageView user_picture = new ImageView();
+        user_picture.setImage(new Image(getClass().getResourceAsStream("1.jpg")));
+        user_picture.setX(220);
+        user_picture.setY(40);
+        user_picture.setPreserveRatio(true);
+        user_picture.setFitWidth(80);
+        user_picture.setFitHeight(80);
         ch.setLayoutX(80);
         ch.setLayoutY(420);
         add.setLayoutX(250);
@@ -326,7 +365,7 @@ public class PV implements Initializable {
         add.setAlignment(Pos.BOTTOM_CENTER);
         root = new Pane();
         root.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
-        root.getChildren().addAll(container, add, ch, addm, findm);
+        root.getChildren().addAll(container, add, ch, addm, findm, user_picture, text, text2);
         scene = new Scene(root,300,500);
         stage.setScene(scene);
         stage.show();
@@ -355,9 +394,9 @@ public class PV implements Initializable {
         String username = findm.getText();
         gg.setGROUP_NAME(selectedItem1);
         User us = DataBaseConnection.findByUsername(username);
-        Boolean f = false;
+        Boolean f = true;
         for(int i = 0; i < DataBaseConnection.findfollowersOfUserU(user).size(); i++){
-            if(us == DataBaseConnection.findfollowersOfUserU(user).get(i)){
+            if(us.getUSERNAME().equals(DataBaseConnection.findfollowersOfUserU(user).get(i).getUSERNAME())){
                 f = true;
             }
         }
@@ -376,6 +415,13 @@ public class PV implements Initializable {
                         if(chatBox.getChildren().get(t).equals(messages.get(i))){
                             s = false;
                         }
+                    }
+                    if(counter.get(i) == user.getUSER_ID()){
+                        messages.get(i).setAlignment(Pos.CENTER_LEFT);
+                    }
+                    else{
+                        messages.get(i).setAlignment(Pos.CENTER_RIGHT);
+
                     }
                     if(i == messages.size() - 1){
                         messages.get(i).setAlignment(Pos.CENTER);

@@ -38,7 +38,7 @@ public class ProfileMenu implements Initializable {
     }
 
 
-    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "Log out"};
+    private String[] menuList = {"post", "Comment", "like", "Show Tweet Of All Users", "follow", "private chat", "group chat", "ad", "user", "Log out"};
 
     public void setUser(User user) {
         this.user = user;
@@ -102,6 +102,7 @@ public class ProfileMenu implements Initializable {
                         case "chat":
                             switchToChat();
                             break;
+
 
                         case "Log out":
                             switchTomainpage();

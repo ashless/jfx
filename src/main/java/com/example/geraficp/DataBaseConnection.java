@@ -729,12 +729,11 @@ public class DataBaseConnection {
         while (rs.next()) {
             setA.add(rs.getInt("GROUP_ID"));
         }
-        preparedStmt.setInt(1, setA.size() + 1);
+        preparedStmt.setInt(1, setA.size());
         preparedStmt.setInt(2, groupChat.getUsers().get(0).getUSER_ID());
         preparedStmt.setString(3, groupChat.getGROUP_NAME());
         preparedStmt.setString(4, "N");
         preparedStmt.execute();
-        preparedStmt = con.prepareStatement(query1);
 
     }
 
@@ -1142,7 +1141,9 @@ public class DataBaseConnection {
         ResultSet rs = stmt.executeQuery(query2);
         {
             while (rs.next()) {
-                return new GroupChat(rs.getInt("GROUP_ID"), new ArrayList<User>(), new ArrayList<Chat>());
+                GroupChat gg = new GroupChat(rs.getInt("GROUP_ID"), new ArrayList<User>(), new ArrayList<Chat>());
+                gg.setGROUP_NAME(rs.getString("GROUP_NAME"));
+                return gg;
             }
         }
         return null;
