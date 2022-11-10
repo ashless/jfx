@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.geraficp.PostMenu">
+    <left>
+        <VBox prefHeight="320.0" prefWidth="163.0" BorderPane.alignment="CENTER_RIGHT" />
+    </left>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <bottom>
+        <Label fx:id="myLabel" prefHeight="18.0" prefWidth="615.0" BorderPane.alignment="CENTER" />
+    </bottom>
+    <center>
+        <AnchorPane prefHeight="320.0" prefWidth="135.0">
+            <children>
+                <TextField fx:id="caption" layoutX="57.0" layoutY="84.0" promptText="caption" />
+                <TextField fx:id="imageAddress" layoutX="57.0" layoutY="147.0" promptText="imageAddress" />
+                <Button layoutX="106.0" layoutY="213.0" mnemonicParsing="false" onAction="#addClick" text="add" />
+                <Label fx:id="warning" layoutX="3.0" layoutY="271.0" prefHeight="18.0" prefWidth="288.0" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
